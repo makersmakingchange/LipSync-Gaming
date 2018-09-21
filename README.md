@@ -50,7 +50,7 @@ This GitHub repository will serve as a database for all software files associate
     <td>GameStik Firmware</td>
     <td>2.67</td>
     <td>INO</td>
-    <td><a href="https://github.com/makersmakingchange/LipSync/raw/master/Software/GameStik_Firmware/GameStik_Firmware.ino">GameStik_Firmware.ino</a></td>
+    <td><a href="https://github.com/makersmakingchange/GameStik/raw/master/Software/GameStik_Firmware/GameStik_Firmware.ino">GameStik_Firmware.ino</a></td>
   </tr>
   <tr>
     <td>Interface Board Layout</td>
