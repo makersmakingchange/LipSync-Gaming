@@ -23,6 +23,13 @@ This GitHub repository will serve as a database for all software files associate
     <td><a href="https://github.com/makersmakingchange/LipSync/blob/master/LipSync_Manual.pdf">LipSync_Manual.pdf</a></td>
   </tr>
   <tr>
+    <td>GameStik Setup Guide</td>
+    <td>1.0</td>
+    <td>PDF</td>
+    <td><a href="https://github.com/makersmakingchange/GameStik/blob/master/GameStik_Setup_Guide.pdf">GameStik_Setup_Guide.pdf</a></td>
+  </tr>
+  <tr>
+  <tr>
     <td>Startup Guide</td>
     <td>1.23</td>
     <td>PDF</td>
