@@ -13,7 +13,7 @@
 */
 
 //Developed by : MakersMakingChange
-//VERSION: 1.0 (20 September 2018)
+//VERSION: 1.01 (13 October 2018)
 
 
 #include <EEPROM.h>
@@ -40,7 +40,7 @@
 //***VARIABLE DECLARATION***//
 
 Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID, 
-  JOYSTICK_TYPE_JOYSTICK, 4, 0,
+  JOYSTICK_TYPE_JOYSTICK, 8, 0,
   true, true, false, 
   false, false, false,
   false, false, 
@@ -50,7 +50,10 @@ int button1 = 0;
 int button2 = 1;
 int button3 = 2;
 int button4 = 3;
-
+int button5 = 4;
+int button6 = 5;
+int button7 = 6;
+int button8 = 7;
 
 
 int xh, yh, xl, yl;                               // xh: x-high, yh: y-high, xl: x-low, yl: y-low
@@ -111,7 +114,7 @@ int single = 0;
 int puff1, puff2;
 
 
-int last_button_state[4];       // Last state of the button
+int last_button_state[8];       // Last state of the button
 int dead_zone_divisor = 4;      // A constant to calculate deadzone joystick area for each axis
 
 //-----------------------------------------------------------------------------------------------------------------------------------
@@ -159,6 +162,10 @@ void setup() {
   last_button_state[1] = 0;
   last_button_state[2] = 0;
   last_button_state[3] = 0;
+  last_button_state[4] = 0;
+  last_button_state[5] = 0;
+  last_button_state[6] = 0;
+  last_button_state[7] = 0;
 
   Joystick_Speed_Value();                         // reads saved joystick speed parameter from EEPROM
   delay(10);
@@ -300,16 +307,16 @@ void loop() {
       delay(5);
     }
       if (puff_count < 150) {
-        //Press joystick button number 1
-        if (!last_button_state[0]) {
-          Joystick.pressButton(button1);
+        //Press joystick button number 5 or button A/X in XAC
+        if (!last_button_state[4]) {
+          Joystick.pressButton(button5);
           delay(250);
-          Joystick.releaseButton(button1);
+          Joystick.releaseButton(button5);
           delay(50);
           last_button_state[0] = 0;
         }
       } else if (puff_count > 150 && puff_count < 500) {
-        //Press joystick button number 3
+        //Press joystick button number 3 or Left stick (left press)/Right stick (Right press) in XAC
         if (!last_button_state[2]) {
           Joystick.pressButton(button3);
           delay(250);
@@ -332,16 +339,16 @@ void loop() {
       delay(5);
     }
       if (sip_count < 150) {
-        //Press joystick button number 2
-        if (!last_button_state[1]) {
-          Joystick.pressButton(button2);
+        //Press joystick button number 6 or button B/Y in XAC
+        if (!last_button_state[5]) {
+          Joystick.pressButton(button6);
           delay(250);
-          Joystick.releaseButton(button2);
+          Joystick.releaseButton(button6);
           delay(50);
           last_button_state[1] = 0;
         } 
       } else if (sip_count > 150 && sip_count < 500) {
-        //Press joystick button number 4
+        //Press joystick button number 4 or button LB/RB in XAC
          if (!last_button_state[3]) {
           Joystick.pressButton(button4);
           delay(250);
@@ -368,7 +375,7 @@ void Display_Feature_List(void) {
   Serial.println(" --- ");
   Serial.println("This is the GameStik firmware");
   Serial.println(" ");
-  Serial.println("VERSION: 1.0 (20 September 2018)");
+  Serial.println("VERSION: 1.01 (13 October 2018)");
   Serial.println(" ");
   Serial.println(" --- ");
   Serial.println(" ");
@@ -602,7 +609,7 @@ void Joystick_Calibration(void) {
 
 //***MANUAL JOYSTICK POSITION CALIBRATION***///
 void Manual_Joystick_Home_Calibration(void) {
-
+  
   xh = analogRead(X_DIR_HIGH);            // Initial neutral x-high value of joystick
   delay(10);
   Serial.println(xh);                     // Recommend keeping in for diagnostic purposes
