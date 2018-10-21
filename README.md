@@ -24,7 +24,7 @@ This GitHub repository will serve as a database for all software files associate
   </tr>
   <tr>
     <td>GameStik Setup Guide</td>
-    <td>1.0</td>
+    <td>1.11</td>
     <td>PDF</td>
     <td><a href="https://github.com/makersmakingchange/GameStik/blob/master/GameStik_Setup_Guide.pdf">GameStik_Setup_Guide.pdf</a></td>
   </tr>
@@ -55,7 +55,7 @@ This GitHub repository will serve as a database for all software files associate
   </tr>
   <tr>
     <td>GameStik Firmware</td>
-    <td>2.67</td>
+    <td>1.11</td>
     <td>INO</td>
     <td><a href="https://github.com/makersmakingchange/GameStik/raw/master/Software/GameStik_Firmware/GameStik_Firmware.ino">GameStik_Firmware.ino</a></td>
   </tr>
