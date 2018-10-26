@@ -387,9 +387,9 @@ void decreaseJoystickSpeed(void) {
 
 void pressureSensorInitialization(void) {
   
-  float nominal_joystick_value = (((float)analogRead(PRESSURE_JOYSTICK)) / 1024.0) * 5.0; // Initial neutral pressure transducer analog value [0.0V - 5.0V]
-  sipThreshold = nominal_joystick_value + 0.5;    //Create sip pressure threshold value ***Larger values tend to minimize frequency of inadvertent activation
-  puffThreshold = nominal_joystick_value - 0.5;   //Create puff pressure threshold value ***Larger values tend to minimize frequency of inadvertent activation
+  float nominalJoystickValue = (((float)analogRead(PRESSURE_JOYSTICK)) / 1024.0) * 5.0; // Initial neutral pressure transducer analog value [0.0V - 5.0V]
+  sipThreshold = nominalJoystickValue + 0.5;    //Create sip pressure threshold value ***Larger values tend to minimize frequency of inadvertent activation
+  puffThreshold = nominalJoystickValue - 0.5;   //Create puff pressure threshold value ***Larger values tend to minimize frequency of inadvertent activation
   
 }
 
