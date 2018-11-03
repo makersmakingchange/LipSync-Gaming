@@ -13,7 +13,7 @@
 */
 
 //Developed by : MakersMakingChange
-//VERSION: 1.11 (20 October 2018) 
+//VERSION: 1.12 (3 November 2018) 
 
 
 #include <EEPROM.h>
@@ -37,6 +37,17 @@
 #define Y_DIR_HIGH A2                             // Y Direction High (Cartesian positive y : up) - analog input pin A2
 #define Y_DIR_LOW A10                             // Y Direction Low (Cartesian negative y : down) - analog input pin A10
 
+#define FIXED_DELAY 10
+
+//***Map Sip & Puff actions to joystick buttons***//
+
+int actionButton1 = 4;                            //A1.Short puff is mapped to button number 5 or button A(Left USB)/X(Right USB) in XAC                               
+int actionButton2 = 5;                            //A2.Short sip is mapped to button number 6 or button B(Left USB)/Y(Right USB) in XAC                               
+int actionButton3 = 3;                            //A3.Long puff is mapped to button number 4 or button LB(Left USB)/RB(Right USB) in XAC
+int actionButton4 = 0;                            //A4.Long sip ( Used for Shift action ) is mapped to button number 1 or button X1(Left USB)/View(Right USB) in XAC 
+int actionButton5 = 6;                            //A5.Very Long puff is mapped to button number 7 or button View(Left USB)/X1(Right USB) in XAC
+int actionButton6 = 7;                            //A6.Very Long sip is mapped to button number 8 or button Menu(Left USB)/X2(Right USB) in XAC
+
 //***VARIABLE DECLARATION***//
 
 Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID, 
@@ -46,19 +57,10 @@ Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID,
   false, false, 
   false, false, false);                         //Defining the joystick REPORT_ID and profile type
 
-int button1 = 0;                                //Declare button number variables 
-int button2 = 1;
-int button3 = 2;
-int button4 = 3;
-int button5 = 4;
-int button6 = 5;
-int button7 = 6;
-int button8 = 7;
 
 int xHigh, yHigh, xLow, yLow;   
 
-int speedCounter = 2;                         //Declare variables for speed functionality 
-int fixedDelay = 10;
+int speedCounter = 5;                         //Declare variables for speed functionality 
 int joystickDelay;
 
 float sipThreshold;                           //Declare sip and puff variables 
@@ -67,7 +69,7 @@ float joystickPress;
 unsigned int puffCount;
 unsigned int sipCount;
 
-int lastButtonState[8];                       //Last state of the button
+int lastButtonState[5];                       //Last state of the button
 
 //-----------------------------------------------------------------------------------------------------------------------------------
 
@@ -114,8 +116,6 @@ void setup() {
   lastButtonState[3] = 0;
   lastButtonState[4] = 0;
   lastButtonState[5] = 0;
-  lastButtonState[6] = 0;
-  lastButtonState[7] = 0;
 
   joystickSpeedValue();                         //Reads saved joystick speed parameter from EEPROM and sets the speed counter
   delay(10);
@@ -128,7 +128,7 @@ void setup() {
 
   displayFeatureList();                         //Display the list of features 
   
-  joystickDelay = pow(1.6,(9-speedCounter))*fixedDelay;
+  calculateJoystickDelay();                    //Calculate joystick action delay
 
   Serial.print("Speed level: ");
   Serial.println((9-speedCounter));
@@ -200,31 +200,28 @@ void loop() {
       delay(5);
     }
       if (puffCount < 150) {
-        //Press joystick button number 5 or button A/X in XAC
-        if (!lastButtonState[4]) {
-          Joystick.pressButton(button5);
+        if (!lastButtonState[0]) {
+          Joystick.pressButton(actionButton1);
           delay(250);
-          Joystick.releaseButton(button5);
+          Joystick.releaseButton(actionButton1);
           delay(50);
-          lastButtonState[4] = 0;
+          lastButtonState[0] = 0;
         }
       } else if (puffCount > 150 && puffCount < 450) {
-        //Press joystick button number 4 or button LB/RB in XAC
-        if (!lastButtonState[3]) {
-          Joystick.pressButton(button4);
+        if (!lastButtonState[2]) {
+          Joystick.pressButton(actionButton3);
           delay(250);
-          Joystick.releaseButton(button4);
+          Joystick.releaseButton(actionButton3);
           delay(50);
-          lastButtonState[3] = 0;
+          lastButtonState[2] = 0;
         } 
       } else if (puffCount > 450) {
-        //Press joystick button number 7 or button View/X1 in XAC
-        if (!lastButtonState[6]) {
-          Joystick.pressButton(button7);
+        if (!lastButtonState[4]) {
+          Joystick.pressButton(actionButton5);
           delay(250);
-          Joystick.releaseButton(button7);
+          Joystick.releaseButton(actionButton5);
           delay(50);
-          lastButtonState[6] = 0;
+          lastButtonState[4] = 0;
         } 
       }
     puffCount = 0;
@@ -237,35 +234,32 @@ void loop() {
       delay(5);
     }
       if (sipCount < 150) {
-        //Press joystick button number 6 or button B/Y in XAC
-        if (!lastButtonState[5]) {
-          Joystick.pressButton(button6);
+        if (!lastButtonState[1]) {
+          Joystick.pressButton(actionButton2);
           delay(250);
-          Joystick.releaseButton(button6);
+          Joystick.releaseButton(actionButton2);
           delay(50);
-          lastButtonState[5] = 0;
+          lastButtonState[1] = 0;
         } 
       } else if (sipCount > 150 && sipCount < 450) {
-        //Press joystick button number 1 or button X1/View in XAC ( Used for Shift action )
         blink(1, 250, 1); 
-        if (!lastButtonState[0]) {
-          Joystick.pressButton(button1);
+        if (!lastButtonState[3]) {
+          Joystick.pressButton(actionButton4);
           delay(50);
-          lastButtonState[0] = 1;
+          lastButtonState[3] = 1;
         } 
         else {
-          Joystick.releaseButton(button1);
+          Joystick.releaseButton(actionButton4);
           delay(50);  
-          lastButtonState[0] = 0;    
+          lastButtonState[3] = 0;    
         }
       } else if (sipCount > 450) {
-        //Press joystick button number 8 or button Menu/X2 in XAC
-         if (!lastButtonState[7]) {
-          Joystick.pressButton(button8);
+         if (!lastButtonState[5]) {
+          Joystick.pressButton(actionButton6);
           delay(250);
-          Joystick.releaseButton(button8);
+          Joystick.releaseButton(actionButton6);
           delay(50);
-          lastButtonState[7] = 0;
+          lastButtonState[5] = 0;
         } 
       }
     sipCount = 0;
@@ -285,7 +279,7 @@ void displayFeatureList(void) {
   Serial.println(" --- ");
   Serial.println("This is the GameStik firmware");
   Serial.println(" ");
-  Serial.println("VERSION: 1.11 (20 October 2018)");
+  Serial.println("VERSION: 1.12 (3 November 2018)");
   Serial.println(" ");
   Serial.println(" --- ");
   Serial.println(" ");
@@ -339,7 +333,20 @@ void joystickSpeedValue(void) {
   int var;
   EEPROM.get(2, var);
   delay(5);
-  speedCounter = var;
+  if(var>0){
+    speedCounter = var;
+  } 
+  else {
+    EEPROM.put(2, speedCounter);
+    delay(5);
+  }
+}
+
+//***CALCULATE JOYSTICK DELAY FUNCTION***//
+
+void calculateJoystickDelay(void) {
+  joystickDelay = pow(1.6,(9-speedCounter))*FIXED_DELAY;
+  delay(5);
 }
 
 //***INCREASE JOYSTICK SPEED FUNCTION***//
@@ -352,7 +359,7 @@ void increaseJoystickSpeed(void) {
     speedCounter = 8;
   } else {
     blink(speedCounter, 100, 1);
-    joystickDelay = pow(1.6,(9-speedCounter))*fixedDelay;
+    joystickDelay = pow(1.6,(9-speedCounter))*FIXED_DELAY;
     EEPROM.put(2, speedCounter);
     delay(25);
   }
@@ -370,12 +377,12 @@ void decreaseJoystickSpeed(void) {
     speedCounter = 0;
   } else if (speedCounter == 0) {
     blink(1, 350, 1);
-    joystickDelay = pow(1.6,(9-speedCounter))*fixedDelay;
+    joystickDelay = pow(1.6,(9-speedCounter))*FIXED_DELAY;
     EEPROM.put(2, speedCounter);
     delay(25);
   } else {
     blink(speedCounter, 100, 1);
-    joystickDelay = pow(1.6,(9-speedCounter))*fixedDelay;
+    joystickDelay = pow(1.6,(9-speedCounter))*FIXED_DELAY;
     EEPROM.put(2, speedCounter);
     delay(25);
   }
@@ -392,5 +399,3 @@ void pressureSensorInitialization(void) {
   puffThreshold = nominalJoystickValue - 0.5;   //Create puff pressure threshold value ***Larger values tend to minimize frequency of inadvertent activation
   
 }
-
-
