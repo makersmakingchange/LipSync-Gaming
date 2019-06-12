@@ -55,7 +55,7 @@ This GitHub repository will serve as a database for all software files associate
   </tr>
   <tr>
     <td>GameStik Firmware</td>
-    <td>1.11</td>
+    <td>1.13</td>
     <td>INO</td>
     <td><a href="https://github.com/makersmakingchange/GameStik/raw/master/Software/GameStik_Firmware/GameStik_Firmware.ino">GameStik_Firmware.ino</a></td>
   </tr>
