@@ -129,7 +129,7 @@ void setup() {
   Serial.print("Configuration time: ");
   Serial.println(execTime);
 
-  ledBlink(4, 250, 3);                                   //End the initialization visual feedback
+  ledBlink(4, 250, 3);                                //End the initialization visual feedback
 
   displayVersion();                                   //Display the list of features 
   
