@@ -50,10 +50,10 @@ This GitHub repository will serve as a database for all software files associate
     <td><a href="https://raw.githubusercontent.com/makersmakingchange/LipSync-Gaming/master/LipSync_BOM.csv" download target="_blank">LipSync_BOM.csv</a></td>
   </tr>
   <tr>
-    <td>GameStik Firmware</td>
+    <td>LipSync Gaming Firmware</td>
     <td>1.13</td>
     <td>INO</td>
-    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/raw/master/Software/GameStik_Firmware/GameStik_Firmware.ino">GameStik_Firmware.ino</a></td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/raw/master/Software/LipSync_Gaming_Firmware/LipSync_Gaming_Firmware.ino">LipSync_Gaming_Firmware.ino</a></td>
   </tr>
   <tr>
     <td>Interface Board Layout</td>
