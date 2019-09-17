@@ -22,7 +22,7 @@ This GitHub repository will serve as a database for all software files associate
     <td>LipSync Gaming Setup Guide</td>
     <td>1.3</td>
     <td>PDF</td>
-    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/master/GameStik_Setup_Guide.pdf">GameStik_Setup_Guide.pdf</a></td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/master/LipSync_Gaming_Setup_Guide.pdf">LipSync_Gaming_Setup_Guide.pdf</a></td>
   </tr>
   <tr>
   <tr>
@@ -41,13 +41,13 @@ This GitHub repository will serve as a database for all software files associate
     <td>BOM (XLSX)</td>
     <td>July 3, 2018</td>
     <td>XLSX</td>
-    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/raw/master/LipSync_BOM.xlsx">LipSync_BOM.xlsx</a></td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/raw/master/LipSync_Gaming_BOM.xlsx">LipSync_Gaming_BOM.xlsx</a></td>
   </tr>
   <tr>
     <td>BOM (CSV)</td>
     <td>July 3, 2018</td>
     <td>CSV</td>
-    <td><a href="https://raw.githubusercontent.com/makersmakingchange/LipSync-Gaming/master/LipSync_BOM.csv" download target="_blank">LipSync_BOM.csv</a></td>
+    <td><a href="https://raw.githubusercontent.com/makersmakingchange/LipSync-Gaming/master/LipSync_Gaming_BOM.csv" download target="_blank">LipSync_Gaming_BOM.csv</a></td>
   </tr>
   <tr>
     <td>LipSync Gaming Firmware</td>
