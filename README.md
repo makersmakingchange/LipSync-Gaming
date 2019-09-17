@@ -2,7 +2,7 @@
 
 LipSync Gaming is a mouth-operated gaming joystick based on the LipSync which is being developed to allow quadriplegics and other people with limited hand use the ability to play video games by manipulation of a mouth-operated joystick with integrated sip and puff controls.
 
-This GitHub repository will serve as a database for all software files associated with the GameStik and the rest of the files will be based on the LipSync.
+This GitHub repository will serve as a database for all software files associated with the LipSync Gaming and the rest of the files will be based on the LipSync.
 
 ## Download
 
