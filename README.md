@@ -79,13 +79,13 @@ This GitHub repository will serve as a database for all software files associate
   </tr>
   <tr>
     <td>Interface Board Layout</td>
-    <td>2.7</td>
+    <td>2.71</td>
     <td>BRD</td>
     <td><a href="https://raw.githubusercontent.com/makersmakingchange/LipSync-Gaming/master/Hardware/PCB_design/LipSync_Interface_Board.brd">LipSync_Interface_Board.brd</a></td>
   </tr>
   <tr>
     <td>Interface Board Schematic</td>
-    <td>2.7</td>
+    <td>2.71</td>
     <td>SCH</td>
     <td><a href="https://raw.githubusercontent.com/makersmakingchange/LipSync-Gaming/master/Hardware/PCB_design/LipSync_Interface_Board.sch">LipSync_Interface_Board.sch</a></td>
   </tr>
