@@ -20,7 +20,7 @@
 */
 
 //Developed by : MakersMakingChange
-//VERSION: 1.13 (16 September 2019) 
+//VERSION: 1.14 (2 October 2019) 
 
 
 #include <EEPROM.h>
@@ -47,7 +47,7 @@
 //***CUSTOMIZE VALUES***//
 
 #define PRESSURE_THRESHOLD 0.5                    //Pressure sip and puff threshold 
-#define FIXED_DELAY 10
+#define FIXED_DELAY 5
 
 //***Map Sip & Puff actions to joystick buttons***//
 
@@ -342,7 +342,7 @@ void displayVersion(void) {
 
   Serial.println(" ");
   Serial.println(" --- ");
-  Serial.println("This is LipSync Gaming V1.13 (11 June 2019)");
+  Serial.println("This is LipSync Gaming V1.14 (2 October 2019)");
   Serial.println(" ");
   Serial.println(" --- ");
   Serial.println(" ");
@@ -434,7 +434,7 @@ void joystickSpeedValue(void) {
 //***CALCULATE JOYSTICK DELAY FUNCTION***//
 
 void calculateJoystickDelay(void) {
-  joystickDelay = pow(1.6,(9-speedCounter))*FIXED_DELAY;
+  joystickDelay = pow(1.6,(11-speedCounter))*FIXED_DELAY;
   delay(5);
 }
 
@@ -443,12 +443,12 @@ void calculateJoystickDelay(void) {
 void increaseJoystickSpeed(void) {
   speedCounter++;
 
-  if (speedCounter == 9) {
+  if (speedCounter == 11) {
     ledBlink(6, 50, 3);
-    speedCounter = 8;
+    speedCounter = 10;
   } else {
     ledBlink(speedCounter+1, 100, 1);
-    joystickDelay = pow(1.6,(9-speedCounter))*FIXED_DELAY;
+    joystickDelay = pow(1.6,(11-speedCounter))*FIXED_DELAY;
     EEPROM.put(2, speedCounter);
     delay(25);
   }
@@ -466,12 +466,12 @@ void decreaseJoystickSpeed(void) {
     speedCounter = 0;
   } else if (speedCounter == 0) {
     ledBlink(1, 350, 1);
-    joystickDelay = pow(1.6,(9-speedCounter))*FIXED_DELAY;
+    joystickDelay = pow(1.6,(11-speedCounter))*FIXED_DELAY;
     EEPROM.put(2, speedCounter);
     delay(25);
   } else {
     ledBlink(speedCounter+1, 100, 1);
-    joystickDelay = pow(1.6,(9-speedCounter))*FIXED_DELAY;
+    joystickDelay = pow(1.6,(11-speedCounter))*FIXED_DELAY;
     EEPROM.put(2, speedCounter);
     delay(25);
   }
