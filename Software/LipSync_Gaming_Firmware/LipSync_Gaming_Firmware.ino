@@ -20,7 +20,7 @@
 */
 
 //Developed by : MakersMakingChange
-//VERSION: 1.14 (2 October 2019) 
+//VERSION: 1.15 (20 February 2020) 
 
 
 #include <EEPROM.h>
@@ -48,6 +48,9 @@
 
 #define PRESSURE_THRESHOLD 0.5                    //Pressure sip and puff threshold 
 #define FIXED_DELAY 5
+#define DEAD_ZONE 8
+#define DEBUG_MODE true
+#define BUTTON_MODE 0                             //Set button mode ( 0 = Default , 1 = analog trigger )
 
 //***Map Sip & Puff actions to joystick buttons***//
 
@@ -80,8 +83,11 @@ unsigned int puffCount;
 unsigned int sipCount;
 
 int lastButtonState[5];                           //Last state of the button
+int buttonMode;
 
 bool settingsEnabled = false; 
+
+int deadZone;
 
 //-----------------------------------------------------------------------------------------------------------------------------------
 
@@ -129,12 +135,18 @@ void setup() {
   lastButtonState[4] = 0;
   lastButtonState[5] = 0;
   
-  joystickSpeedValue();                              //Reads saved joystick speed parameter from EEPROM and sets the speed counter
+  getJoystickSpeed();                              //Reads saved joystick speed parameter from EEPROM and sets the speed counter
   delay(10);
-  
-  int execTime = millis();
-  Serial.print("Configuration time: ");
-  Serial.println(execTime);
+  joystickCenterCalibration();
+  delay(10);
+  getButtonMode();
+  delay(10);
+
+  if(DEBUG_MODE) {
+    int execTime = millis();
+    Serial.print("Configuration time: ");
+    Serial.println(execTime);
+  }
 
   ledBlink(4, 250, 3);                                //End the initialization visual feedback
 
@@ -142,8 +154,20 @@ void setup() {
   
   calculateJoystickDelay();                           //Calculate joystick action delay
 
-  Serial.print("Speed level: ");
-  Serial.println(speedCounter+1);
+  if(DEBUG_MODE) {
+    Serial.print("Speed level: ");
+    Serial.println(speedCounter+1);
+    delay(5);
+
+    Serial.print("Dead zone value : ");
+    Serial.println(deadZone);
+    delay(5);
+
+    Serial.print("Button Mode (0:Default,1:Analog Trigger}: ");
+    Serial.println(buttonMode);
+    delay(5);
+  }
+
   delay(5);
 }
 
@@ -176,20 +200,57 @@ void loop() {
 
   xx = constrain(xx, -128, 128);                      //Put constrain to set x and y range between -128 and 128 as lower and upper bounds 
   yy = constrain(yy, -128, 128);
-  
+
+  xx = (xx <= deadZone && xx>=-deadZone)? 0:xx;     //Make sure the default values of x and y are at the center when joystick is released 
+  yy = (yy <= deadZone && yy>=-deadZone)? 0:yy;
+
+  xx = ((sqrt(sq(xx)+sq(yy))>=128) && (xx>=deadZone || xx <= -deadZone))? 128*sgn(xx):xx;   //Make sure the maximum diagonal movement in joystick results maximum diagonal movement 
+  yy = ((sqrt(sq(xx)+sq(yy))>=128) && (yy>=deadZone || yy <= -deadZone))? 128*sgn(yy):yy;
+
   xx = map(xx, -128, 128, 0, 1023);                   //Map back x and y range from (-128 to 128) as current bounds to (0 to 1023) as target bounds
   yy = map(yy, -128, 128, 0, 1023);
 
+  /*
+  if(DEBUG_MODE){
+    Serial.print("yy: ");
+    Serial.println(yy);
+  
+    Serial.print("xx: ");
+    Serial.println(xx);     
+  }
+  */
+
+  delay(joystickDelay);
+
   Joystick.setXAxis(xx);                              //Set Joystick's x and y values
   Joystick.setYAxis(yy);
-  delay(joystickDelay);
   
-  //The joystick speed control push button functions
+  pushButtonHandler();                                //The joystick speed control push button functions
 
+  sipAndPuffHandler(buttonMode);                               //Pressure sensor sip and puff functions
+
+}
+
+//***END OF INFINITE LOOP***//
+
+//-----------------------------------------------------------------------------------------------------------------------------------
+
+//***FIND SIGN OF VARIABLE FUNCTION***//
+
+int8_t sgn(int val) {
+ if (val < 0) return -1;
+ if (val==0) return 0;
+ return 1;
+}
+
+//***PUSH BUTTON SPEED HANDLER FUNCTION***//
+
+void pushButtonHandler(void) {
+  
   if (digitalRead(BUTTON_UP_PIN) == LOW) {
     delay(250);
     if (digitalRead(BUTTON_DOWN_PIN) == LOW) {
-      //Additional function 
+      joystickCenterCalibration();                   //Joystick default center values 
     } else {
       increaseJoystickSpeed();                        //The increase joystick speed with push button up
     }
@@ -198,93 +259,178 @@ void loop() {
   if (digitalRead(BUTTON_DOWN_PIN) == LOW) {
     delay(250);
     if (digitalRead(BUTTON_UP_PIN) == LOW) {
-      //Additional function 
+      joystickCenterCalibration();                   //Joystick default center values
     } else {
       decreaseJoystickSpeed();                        //The decrease joystick speed with push button down
     }
   }
+}
 
-  //Pressure sensor sip and puff functions
+//***SIP AND PUFF BUTTON HANDLER FUNCTION***//
+
+void sipAndPuffHandler(int mode) {
 
   joystickPress = (((float)analogRead(PRESSURE_PIN)) / 1023.0) * 5.0;   
   //Measure the pressure value and compare the result with puff pressure Thresholds 
   if (joystickPress < puffThreshold) {
-    while (joystickPress < puffThreshold) {
-      joystickPress = (((float)analogRead(PRESSURE_PIN)) / 1023.0) * 5.0;
-      puffCount++;                                    //Threshold counter
-      delay(5);
-    }
-      if (puffCount < 150) {
-        if (!lastButtonState[0]) {
-          Joystick.pressButton(actionButton1);
-          delay(250);
-          Joystick.releaseButton(actionButton1);
-          delay(50);
-          lastButtonState[0] = 0;
+    switch (mode) {
+      case 0:
+        while (joystickPress < puffThreshold) {
+          joystickPress = (((float)analogRead(PRESSURE_PIN)) / 1023.0) * 5.0;
+          puffCount++;                                    //Threshold counter
+          delay(5);
         }
-      } else if (puffCount > 150 && puffCount < 450) {
-        if (!lastButtonState[2]) {
-          Joystick.pressButton(actionButton3);
-          delay(250);
-          Joystick.releaseButton(actionButton3);
-          delay(50);
-          lastButtonState[2] = 0;
-        } 
-      } else if (puffCount > 450) {
-        if (!lastButtonState[4]) {
-          Joystick.pressButton(actionButton5);
-          delay(250);
-          Joystick.releaseButton(actionButton5);
-          delay(50);
-          lastButtonState[4] = 0;
-        } 
-      }
-    puffCount = 0;
+        if (puffCount < 150) {
+          if (!lastButtonState[0]) {
+              Joystick.pressButton(actionButton1);
+              delay(250);
+              Joystick.releaseButton(actionButton1);
+              delay(50);
+              lastButtonState[0] = 0;
+            }
+          } else if (puffCount > 150 && puffCount < 450) {
+            if (!lastButtonState[2]) {
+              Joystick.pressButton(actionButton3);
+              delay(250);
+              Joystick.releaseButton(actionButton3);
+              delay(50);
+              lastButtonState[2] = 0;
+            } 
+          } else if (puffCount > 450) {
+            if (!lastButtonState[4]) {
+              Joystick.pressButton(actionButton5);
+              delay(250);
+              Joystick.releaseButton(actionButton5);
+              delay(50);
+              lastButtonState[4] = 0;
+            } 
+          }
+        puffCount = 0;
+        break;
+      case 1: 
+        Joystick.pressButton(actionButton1);
+        delay(10);
+        lastButtonState[0] = 1;
+        break;
+    }
   }
   //Measure the pressure value and compare the result with sip pressure Thresholds 
   if (joystickPress > sipThreshold) {
-    while (joystickPress > sipThreshold) {
-      joystickPress = (((float)analogRead(PRESSURE_PIN)) / 1023.0) * 5.0;
-      sipCount++;
-      delay(5);
-    }
-      if (sipCount < 150) {
-        if (!lastButtonState[1]) {
-          Joystick.pressButton(actionButton2);
-          delay(250);
-          Joystick.releaseButton(actionButton2);
-          delay(50);
-          lastButtonState[1] = 0;
-        } 
-      } else if (sipCount > 150 && sipCount < 450) {
-        ledBlink(1, 250, 1); 
-        if (!lastButtonState[3]) {
-          Joystick.pressButton(actionButton4);
-          delay(50);
-          lastButtonState[3] = 1;
-        } 
-        else {
-          Joystick.releaseButton(actionButton4);
-          delay(50);  
-          lastButtonState[3] = 0;    
+    switch (mode) {
+      case 0:
+        while (joystickPress > sipThreshold) {
+          joystickPress = (((float)analogRead(PRESSURE_PIN)) / 1023.0) * 5.0;
+          sipCount++;
+          delay(5);
         }
-      } else if (sipCount > 450) {
-         if (!lastButtonState[5]) {
-          Joystick.pressButton(actionButton6);
-          delay(250);
-          Joystick.releaseButton(actionButton6);
-          delay(50);
-          lastButtonState[5] = 0;
-        } 
-      }
-    sipCount = 0;
+        if (sipCount < 150) {
+          if (!lastButtonState[1]) {
+              Joystick.pressButton(actionButton2);
+              delay(250);
+              Joystick.releaseButton(actionButton2);
+              delay(50);
+              lastButtonState[1] = 0;
+            } 
+          } else if (sipCount > 150 && sipCount < 450) {
+            ledBlink(1, 250, 1); 
+            if (!lastButtonState[3]) {
+              Joystick.pressButton(actionButton4);
+              delay(50);
+              lastButtonState[3] = 1;
+            } 
+            else {
+              Joystick.releaseButton(actionButton4);
+              delay(50);  
+              lastButtonState[3] = 0;    
+            }
+          } else if (sipCount > 450) {
+             if (!lastButtonState[5]) {
+              Joystick.pressButton(actionButton6);
+              delay(250);
+              Joystick.releaseButton(actionButton6);
+              delay(50);
+              lastButtonState[5] = 0;
+            } 
+          }
+        sipCount = 0;
+        break;
+      case 1:
+        Joystick.pressButton(actionButton2);
+        delay(10);
+        lastButtonState[1] = 1;
+        break;
+    }
   }
-  
+  if (joystickPress <= sipThreshold && joystickPress >= puffThreshold && mode==1) {
+    Joystick.releaseButton(actionButton1);
+    Joystick.releaseButton(actionButton2);
+    delay(10);
+    lastButtonState[0] = 0;
+    lastButtonState[1] = 0;
+    
+  }
 }
 
-//***END OF INFINITE LOOP***//
+//***GET BUTTON MODE FUNCTION***//
 
-//-----------------------------------------------------------------------------------------------------------------------------------
+void getButtonMode(void) {
+  delay(10);
+  EEPROM.get(32, buttonMode);
+  delay(10);
+  if(buttonMode !=0 && buttonMode !=1){
+    buttonMode=BUTTON_MODE;
+    EEPROM.put(32, buttonMode);
+    delay(10);
+  }
+}
+
+//***SET BUTTON MODE FUNCTION***//
+
+void setButtonMode(int mode) {
+  if(mode ==0 || mode ==1){
+    buttonMode=mode;
+    EEPROM.put(32, buttonMode);
+    delay(10);
+    Serial.print("Button mode is set to: ");
+    Serial.println(buttonMode);
+  }
+}
+
+//***JOYSTICK DEFAULT VALUES FUNCTION***//
+
+void joystickCenterCalibration(void) {
+  
+  int xDefaultHigh = analogRead(X_DIR_HIGH_PIN);
+  int xDefaultLow = analogRead(X_DIR_LOW_PIN);
+  int yDefaultHigh = analogRead(Y_DIR_LOW_PIN);
+  int yDefaultLow = analogRead(Y_DIR_HIGH_PIN);
+
+  xDefaultHigh = map(xDefaultHigh, 0, 1023, 0, 16);                 //Map x and y values from (0 to 1023) bound to (0 to 16) as target bound
+  xDefaultLow = map(xDefaultLow, 0, 1023, 0, 16);                   //The actual input values are approximately in (0 to 800) bound range
+  yDefaultHigh = map(yDefaultHigh, 0, 1023, 0, 16);
+  yDefaultLow = map(yDefaultLow, 0, 1023, 0, 16);
+
+  int xDelta = xDefaultHigh - xDefaultLow;                          //Calculate the x and y delta values   
+  int yDelta = yDefaultHigh - yDefaultLow;
+ 
+  int xDefault = (xDelta >= 0)? sq(xDelta):-sq(xDelta);     //Square the magnitude of x and y Delta values
+  int yDefault = (yDelta >= 0)? sq(yDelta):-sq(yDelta);
+  
+  xDefault -= (xDelta >= 0)? int(sqrt(yDelta)):-int(sqrt(-yDelta));   //Subtract the square root of y Delta value from x Delta value to make movement smoother 
+  yDefault -= (yDelta >= 0)? int(sqrt(xDelta)):-int(sqrt(-xDelta));   //Subtract the square root of x Delta value from y Delta value to make movement smoother 
+
+  xDefault = constrain(xDefault, -128, 128);                      //Put constrain to set x and y range between -128 and 128 as lower and upper bounds 
+  yDefault = constrain(yDefault, -128, 128);
+
+  deadZone = max(max (abs(xDefault), abs(xDefault)), DEAD_ZONE);    //Select the largest value as dead zone
+
+  if(DEBUG_MODE) {
+    Serial.print("Dead zone value : ");
+    Serial.println(deadZone);
+    delay(5);
+  }
+  delay(5);
+}
 
 //***SERIAL SETTINGS FUNCTION TO CHANGE SPEED AND COMMUNICATION MODE USING SOFTWARE***//
 
@@ -299,6 +445,8 @@ bool serialSettings(bool enabled) {
        if (settingsFlag==false && inString=="settings") {
        Serial.println("Actions:");                //Display list of possible actions 
        Serial.println("S,(+ or -)");
+       Serial.println("C,0");
+       Serial.println("B,(0 or 1)");
        settingsFlag=true;                         //Set the return flag to true so settings actions can be performed in the next call to the function
        }
        else if (settingsFlag==true && inString.length()==((2*2)-1)){ //Check if the input parameter is true and the received string is 3 characters only
@@ -334,6 +482,22 @@ void writeSettings(String changeString) {
       decreaseJoystickSpeed();
       delay(5);
     } 
+
+     //Joystick center Calibration
+     if(changeChar[0]=='C' && changeChar[1]=='0') {
+      joystickCenterCalibration();
+      delay(5);
+    }
+
+    //Change Button mode
+    if(changeChar[0]=='B' && changeChar[1]=='0') {
+      setButtonMode(0);
+      delay(5);
+    } else if (changeChar[0]=='B' && changeChar[1]=='1') {
+      setButtonMode(1);
+      delay(5);
+    } 
+    
 }
 
 //***DISPLAY VERSION FUNCTION***//
@@ -342,7 +506,7 @@ void displayVersion(void) {
 
   Serial.println(" ");
   Serial.println(" --- ");
-  Serial.println("This is LipSync Gaming V1.14 (2 October 2019)");
+  Serial.println("This is LipSync Gaming V1.15 (20 February 2020)");
   Serial.println(" ");
   Serial.println(" --- ");
   Serial.println(" ");
@@ -417,7 +581,7 @@ void ledBlink(int numBlinks, int delayBlinks, int ledNumber ) {
 
 //***HID JOYSTICK SPEED FUNCTION***//
 
-void joystickSpeedValue(void) {
+void getJoystickSpeed(void) {
   int var;
   EEPROM.get(2, var);
   delay(5);
@@ -452,8 +616,11 @@ void increaseJoystickSpeed(void) {
     EEPROM.put(2, speedCounter);
     delay(25);
   }
-  Serial.print("Speed level: ");
-  Serial.println(speedCounter+1);
+  if(DEBUG_MODE){
+    Serial.print("Speed level: ");
+    Serial.println(speedCounter+1);    
+    delay(5);
+  }
 }
 
 //***DECREASE JOYSTICK SPEED FUNCTION**//
@@ -475,8 +642,12 @@ void decreaseJoystickSpeed(void) {
     EEPROM.put(2, speedCounter);
     delay(25);
   }
-  Serial.print("Speed level: ");
-  Serial.println(speedCounter+1);
+
+  if(DEBUG_MODE){
+    Serial.print("Speed level: ");
+    Serial.println(speedCounter+1);
+    delay(5);
+  }
 }
 
 //***PRESSURE SENSOR INITIALIZATION FUNCTION***//
