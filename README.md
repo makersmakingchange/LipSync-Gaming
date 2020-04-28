@@ -43,13 +43,13 @@ This GitHub repository will serve as a database for all software files associate
   </tr>
   <tr>
     <td>LipSync Gaming Setup Guide</td>
-    <td>1.1</td>
+    <td>1.2</td>
     <td>PDF</td>
     <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/master/LipSync_Gaming_Setup_Guide.pdf">LipSync_Gaming_Setup_Guide.pdf</a></td>
   </tr>
   <tr>
     <td>LipSync Gaming User Guide</td>
-    <td>1.1</td>
+    <td>1.2</td>
     <td>PDF</td>
     <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/master/LipSync_Gaming_User_Guide.pdf">LipSync_Gaming_User_Guide.pdf</a></td>
   </tr>
