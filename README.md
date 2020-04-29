@@ -73,7 +73,7 @@ This GitHub repository will serve as a database for all software files associate
   </tr>
   <tr>
     <td>LipSync Gaming Firmware</td>
-    <td>1.14</td>
+    <td>1.16</td>
     <td>INO</td>
     <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/raw/master/Software/LipSync_Gaming_Firmware/LipSync_Gaming_Firmware.ino">LipSync_Gaming_Firmware.ino</a></td>
   </tr>
