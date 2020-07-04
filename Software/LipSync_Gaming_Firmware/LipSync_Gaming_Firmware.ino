@@ -251,7 +251,7 @@ void loop() {
     Serial.print(yHigh);
     Serial.print(",");
     Serial.println(yLow); 
-    delay(200);
+    delay(100);
   }
 
 
@@ -271,20 +271,7 @@ void loop() {
 
   //Serial out raw data if raw mode is enabled 
   if(rawModeEnabled) {
-    Serial.print("RAW:1:");
-    Serial.print(xOut);
-    Serial.print(",");
-    Serial.print(yOut);
-    Serial.print(",");
-    Serial.print(sipAndPuffRawHandler());
-    Serial.print(":");    
-    Serial.print(xHigh);
-    Serial.print(",");
-    Serial.print(xLow);
-    Serial.print(",");
-    Serial.print(yHigh);
-    Serial.print(",");
-    Serial.println(yLow); 
+    sendRawData(xOut,yOut,sipAndPuffRawHandler(),xHigh,xLow,yHigh,yLow);
     delay(5);
   } else {
     //Perform Joystick X and Y move 
@@ -510,6 +497,25 @@ void sendDebugData() {
   Serial.print(",");
   Serial.println(xHighMax); 
   delay(100);
+}
+
+//***SEND RAW DATA FUNCTION***//
+
+void sendRawData(int x, int y, int action, int xUp, int xDown,int yUp,int yDown) {
+  Serial.print("RAW:1:"); 
+  Serial.print(x); 
+  Serial.print(","); 
+  Serial.print(y); 
+  Serial.print(",");
+  Serial.print(action); 
+  Serial.print(":"); 
+  Serial.print(xUp); 
+  Serial.print(","); 
+  Serial.print(xDown); 
+  Serial.print(",");
+  Serial.print(yUp); 
+  Serial.print(",");
+  Serial.println(yDown); 
 }
 
 //***GET RAW MODE STATE FUNCTION***//
