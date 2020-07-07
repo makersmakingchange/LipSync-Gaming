@@ -251,7 +251,7 @@ void loop() {
     Serial.print(yHigh);
     Serial.print(",");
     Serial.println(yLow); 
-    delay(100);
+    delay(150);
   }
 
 
