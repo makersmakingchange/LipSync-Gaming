@@ -51,10 +51,11 @@
 
 //***CUSTOMIZABLE VARIABLES***//
 
-#define JS_FSR_DEADZONE 60                       //The deadzone for input FSR analog value
+#define JS_FSR_DEADZONE 3                   //The deadzone for input FSR analog value
+#define CHANGE_DEFAULT_TOLERANCE 0.44       //The tolerance in % for changes between current reading and previous reading ( %100 is max FSRs reading )
 #define DEBUG_MODE false
 #define RAW_MODE false
-#define BUTTON_MODE 1                             //Set button mode ( 1 = Digital buttons , 2 = Analog buttons )
+#define BUTTON_MODE 1                           //Set button mode ( 1 = Digital buttons , 2 = Analog buttons )
 #define SENSITIVITY_COUNTER 5
 #define PRESSURE_THRESHOLD 10                   //Pressure sip and puff threshold 
 
@@ -111,12 +112,14 @@ _equationCoef xLowEquation = {};
 _equationCoef yHighEquation = {};
 _equationCoef yLowEquation = {};
 
-int xHigh, xLow, yHigh, yLow;                                                   //FSR raw values 
+int xHigh, yHigh, xLow, yLow;                                                //Current FSR reading variables
+int xHighPrev, yHighPrev, xLowPrev, yLowPrev;                                //Previous FSR reading variables      
 
 int xHighNeutral, xLowNeutral, yHighNeutral, yLowNeutral;                       //Neutral FSR values at the resting position 
 
 int xHighMax, xLowMax, yHighMax, yLowMax;                                       //Max FSR values which are set to the values from EEPROM
 
+int changeTolerance;                                                            //The change tolerance between FSRs readings 
 
 //The input to output (x to y) curve equation using degree five polynomial equation for each sensitivity level
 _equationCoef levelEquation1 = {0.0004,-0.0041,0.0000,-0.0185,1.8000,0.0000};
@@ -210,7 +213,9 @@ void setup() {
   delay(10);
   rawModeEnabled = getRawMode(false);                   //Get the raw mode state
   delay(50); 
-  joystickDeadzone = getDeadzone(false);                //Get the deadzone value 
+  joystickDeadzone = getDeadzone(JS_FSR_DEADZONE,false);                //Get the deadzone value 
+  delay(10);
+  changeTolerance = getChangeTolerance(CHANGE_DEFAULT_TOLERANCE,false); // Get change tolerance using max FSR readings and default tolerance percentage 
   delay(10);
   buttonMode = getButtonMode(false);                     //Get saved joystick button mode parameter from EEPROM
   delay(10);
@@ -237,29 +242,20 @@ void loop() {
   yHigh = analogRead(Y_DIR_HIGH_PIN);
   yLow = analogRead(Y_DIR_LOW_PIN);
 
+  //Check the FSR changes from previous reading and set the skip flag to true if the changes are beyond the tolerance 
+  bool skipChange = abs(xHigh - xHighPrev) < joystickDeadzone && abs(xLow - xLowPrev) < joystickDeadzone && abs(yHigh - yHighPrev) < joystickDeadzone && abs(yLow - yLowPrev) < joystickDeadzone;
+  xHighPrev = xHigh;
+  xLowPrev = xLow;
+  yHighPrev = yHigh;
+  yLowPrev = yLow;
 
-
-  //Debug information 
-  
-  if(debugModeEnabled) {
-    
-    Serial.print("LOG:3:");
-    Serial.print(xHigh);
-    Serial.print(",");
-    Serial.print(xLow);
-    Serial.print(",");
-    Serial.print(yHigh);
-    Serial.print(",");
-    Serial.println(yLow); 
-    delay(150);
-  }
-
+  (joystickDeadzone<changeTolerance) ? joystickDeadzone=changeTolerance : joystickDeadzone=joystickDeadzone;
 
   //Map FSR values to (0 to 16 ) range 
-  float xHighMapped=getMappedFSRValue(xHigh, joystickDeadzone, xHighNeutral, JS_MAPPED_IN_DEADZONE, JS_MAPPED_IN_MAX, xHighEquation);
-  float xLowMapped=getMappedFSRValue(xLow, joystickDeadzone, xLowNeutral, JS_MAPPED_IN_DEADZONE, JS_MAPPED_IN_MAX, xLowEquation);
-  float yHighMapped=getMappedFSRValue(yHigh, joystickDeadzone, yHighNeutral, JS_MAPPED_IN_DEADZONE, JS_MAPPED_IN_MAX, yHighEquation);
-  float yLowMapped=getMappedFSRValue(yLow, joystickDeadzone, yLowNeutral, JS_MAPPED_IN_DEADZONE, JS_MAPPED_IN_MAX, yLowEquation);
+  float xHighMapped = getMappedFSRValue(xHigh, joystickDeadzone, xHighNeutral, JS_MAPPED_IN_DEADZONE, JS_MAPPED_IN_MAX, xHighEquation);
+  float xLowMapped = getMappedFSRValue(xLow, joystickDeadzone, xLowNeutral, JS_MAPPED_IN_DEADZONE, JS_MAPPED_IN_MAX, xLowEquation);
+  float yHighMapped = getMappedFSRValue(yHigh, joystickDeadzone, yHighNeutral, JS_MAPPED_IN_DEADZONE, JS_MAPPED_IN_MAX, yHighEquation);
+  float yLowMapped = getMappedFSRValue(yLow, joystickDeadzone, yLowNeutral, JS_MAPPED_IN_DEADZONE, JS_MAPPED_IN_MAX, yLowEquation);
     
   //Calculate the x and y delta values 
   float xDelta = xHighMapped - xLowMapped;                            
@@ -273,13 +269,30 @@ void loop() {
   if(rawModeEnabled) {
     sendRawData(xOut,yOut,sipAndPuffRawHandler(),xHigh,xLow,yHigh,yLow);
     delay(5);
-  } else {
+  } else if (!skipChange){
     //Perform Joystick X and Y move 
     Joystick.setXAxis(xOut); 
     Joystick.setYAxis(yOut);
     sipAndPuffHandler(buttonMode);  
     delay(5); 
-  }                                                     //Pressure sensor sip and puff functions
+  }                 
+  
+    //Debug information 
+  
+  if(debugModeEnabled) {
+    
+    Serial.print("LOG:3:");
+    Serial.print(xHigh);
+    Serial.print(",");
+    Serial.print(xLow);
+    Serial.print(",");
+    Serial.print(yHigh);
+    Serial.print(",");
+    Serial.println(yLow); 
+    delay(150);
+  }
+  
+  //Pressure sensor sip and puff functions
   pushButtonHandler(BUTTON_UP_PIN,BUTTON_DOWN_PIN);     //The joystick buttons function
   
   delay(JS_DELAY);                                      //The fixed delay for each action loop
@@ -563,18 +576,18 @@ bool setRawMode(bool rawState,bool responseEnabled) {
 
 //***GET DEADZONE VALUE FUNCTION***//
 
-int getDeadzone(bool responseEnabled) {
-  int deadzoneValue = JS_FSR_DEADZONE;
+int getDeadzone(int defaultDeadzone,bool responseEnabled) {
+  int deadzoneValue = defaultDeadzone;
   if(SERIAL_SETTINGS) {
     EEPROM.get(38, deadzoneValue);
     delay(5);
     if(deadzoneValue<=0 || deadzoneValue>99) {
-      EEPROM.put(38, JS_FSR_DEADZONE);
+      EEPROM.put(38, defaultDeadzone);
       delay(5);
-      deadzoneValue=JS_FSR_DEADZONE;
+      deadzoneValue=defaultDeadzone;
       }    
   } else {
-    deadzoneValue=JS_FSR_DEADZONE;
+    deadzoneValue=defaultDeadzone;
     delay(5);    
   }
   if(responseEnabled) {
@@ -587,18 +600,18 @@ int getDeadzone(bool responseEnabled) {
 
 //***SET DEADZONE VALUE FUNCTION***//
 
-int setDeadzone(int deadzoneValue,bool responseEnabled) {
+int setDeadzone(int deadzoneValue,int deadzoneDefaultValue,bool responseEnabled) {
   if(SERIAL_SETTINGS) {
     if(deadzoneValue>0 || deadzoneValue<=99) {
       EEPROM.put(38, deadzoneValue);
       delay(5);
     } else {
-      EEPROM.put(38, JS_FSR_DEADZONE);
+      EEPROM.put(38, deadzoneDefaultValue);
       delay(5);
-      deadzoneValue=JS_FSR_DEADZONE;
+      deadzoneValue=deadzoneDefaultValue;
     }
   } else {
-    deadzoneValue=JS_FSR_DEADZONE;
+    deadzoneValue=deadzoneDefaultValue;
     delay(5);    
   }
   if(responseEnabled) {
@@ -643,10 +656,10 @@ void setJoystickInitialization(bool responseEnabled) {
   delay(10);
 
   //Set the neutral values 
-  xHighNeutral = xHigh;
-  xLowNeutral = xLow;
-  yHighNeutral = yHigh;
-  yLowNeutral = yLow;
+  xHighPrev = xHighNeutral = xHigh;
+  xLowPrev = xLowNeutral = xLow;
+  yHighPrev = yHighNeutral = yHigh;
+  yLowPrev = yLowNeutral = yLow;
 
   //Get the max values from Memory 
   EEPROM.get(22, xHighMax);
@@ -754,6 +767,28 @@ void setJoystickCalibration(bool responseEnabled) {
   delay(10);
 }
 
+//*** GET CHANGE TOLERANCE VALUE CALIBRATION FUNCTION***//
+
+int getChangeTolerance(float changePercent, bool responseEnabled) {
+  int changeTolerance=(int)((xHighMax+xLowMax+yHighMax+yLowMax) * (changePercent/100.0))/4;
+  if(responseEnabled){
+    Serial.print("SUCCESS:CT,0:"); 
+    Serial.print(changePercent); 
+    Serial.print(","); 
+    Serial.print(changeTolerance); 
+    Serial.print(","); 
+    Serial.print(xHighMax); 
+    Serial.print(","); 
+    Serial.print(xLowMax); 
+    Serial.print(",");
+    Serial.print(yHighMax); 
+    Serial.print(",");
+    Serial.println(xHighMax); 
+  }
+  delay(10);
+  return changeTolerance;
+}
+
 
 //***GET BUTTON MODE FUNCTION***//
 
@@ -859,6 +894,8 @@ void factoryReset(bool responseEnabled) {
     EEPROM.put(40, BUTTON_MODE);
     delay(10);
     setButtonMapping(defaultButtonMapping,false);
+    delay(10);
+    changeTolerance = getChangeTolerance(CHANGE_DEFAULT_TOLERANCE,false);
     delay(10);
     
     sensitivityCounter=SENSITIVITY_COUNTER;
@@ -968,11 +1005,11 @@ void writeSettings(String changeString) {
     } 
      //Get deadzone value if received "DZ,0:0" , set deadzone value if received "DZ,1:{Value 1 to 99}" 
      else if(changeChar[0]=='D' && changeChar[1]=='Z' && changeChar[2]=='0' && changeChar[3]=='0' && changeString.length()==4) {
-      joystickDeadzone = getDeadzone(true);
+      joystickDeadzone = getDeadzone(JS_FSR_DEADZONE,true);
       delay(5);
     } else if (changeChar[0]=='D' && changeChar[1]=='Z' && changeChar[2]=='1' && (changeString.length()==4 || changeString.length()==5)) {
       String deadzoneString = changeString.substring(3);
-      joystickDeadzone = setDeadzone(deadzoneString.toInt(),true);
+      joystickDeadzone = setDeadzone(deadzoneString.toInt(),JS_FSR_DEADZONE,true);
       delay(5);
     }
      //Get joystick initialization values if received "IN,0:0" and perform joystick initialization if received "IN,1:1"
@@ -991,6 +1028,11 @@ void writeSettings(String changeString) {
       setJoystickCalibration(true);
       delay(5);
     } 
+     //Get change tolerance values if received "CT,0:0" 
+      else if(changeChar[0]=='C' && changeChar[1]=='T' && changeChar[2]=='0' && changeChar[3]=='0' && changeString.length()==4) {
+      getChangeTolerance(CHANGE_DEFAULT_TOLERANCE,true);
+      delay(5);
+    }
     //Get Button mode : "BM,0:0" , Set Button mode to 1 : "BM,1:1" , Set Button mode to 2 : "BM,1:2"
     else if(changeChar[0]=='B' && changeChar[1]=='M' && changeChar[2]=='0' && changeChar[3]=='0' && changeString.length()==4) {
       buttonMode = getButtonMode(true);
