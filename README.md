@@ -37,7 +37,7 @@ This GitHub repository will serve as a database for all software files associate
     <th>Link</th>
   <tr>
     <td>Assembly Manual</td>
-    <td>1.5</td>
+    <td>1.6</td>
     <td>PDF</td>
     <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/master/LipSync_Manual.pdf">LipSync_Manual.pdf</a></td>
   </tr>
@@ -143,13 +143,32 @@ This GitHub repository will serve as a database for all software files associate
 </table> 
 
 ## Updates 
-For latest updates regarding the project we encourage you to visit our <a href="https://www.makersmakingchange.com/">website</a> and <a href="https://hackaday.io/project/13424-lipsync">Hackaday</a> page.
+For latest updates regarding the project we encourage you to visit our <a href="https://www.makersmakingchange.com/news/">blog</a> and <a href="https://hackaday.io/project/13424-lipsync">Hackaday</a> page.
 
 
 ## Contact Us
 
 For technical questions, to get involved or share your LipSync experience we encourage you to contact info@makersmakingchange.com
 
+<p align="center">
+<a href="https://twitter.com/MakerMakeChange">
+         <img alt="Twitter" img align="center" src="https://i.imgur.com/OvSm9h3.png"></a> 
+<a href="https://www.instagram.com/makersmakingchange/">
+         <img alt="Instagram" img align="center" src="https://i.imgur.com/ouUS0Xa.png"></a>        
+<a href="https://www.facebook.com/makersmakechange/?fref=tag"> 
+         <img alt="Facebook" img align="center" src="https://i.imgur.com/Ok6Jn8P.png"></a>  
+<a href="https://www.youtube.com/channel/UCtn0ODz_yq_w9Uy6lUXGX-A"> 
+         <img alt="Youtube" img align="center" src="https://i.imgur.com/roSOrQE.png"></a>            
+</p>
+<hr>
+<br>
+<p align="center">
+<a href="https://www.oshwa.org">
+	<img align="center" src="http://www.oshwa.org/wp-content/uploads/2014/03/oshw-logo-200-px.png" alt="Open Source Hardware Logo"/></a>
+</p>
 
+<p align="center">
+This is an open source hardware project and adheres to the Open Source Hardware (OSHW) Statement of Principle 1.0 and Open Source Hardware (OSHW) Definition 1.0 found at <a href="http://www.oshwa.org">www.oshwa.org</a>
+</p>
 
 
