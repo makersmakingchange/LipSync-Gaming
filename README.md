@@ -1,7 +1,7 @@
 ## LipSync Gaming
 
 <p align="center">
-<img align="center" src="https://raw.githubusercontent.com/makersmakingchange/blog/gh-pages/_resources/images/LipSync-Gaming_Logo.jpg" width="50%" height="50%" alt="LipSync-Gaming Logo"/>
+<img align="center" src="https://raw.githubusercontent.com/makersmakingchange/blog/gh-pages/_resources/images/LipSync_Logo.jpg" width="50%" height="50%" alt="LipSync Logo"/>
 </p>
 
 The LipSync is an assistive technology device that allows quadriplegics and other people with limited hand function to use touchscreen mobile devices, tablets, and computers by manipulation of a mouth-operated joystick with integrated sip and puff controls. This is an Open-Source Hardware project, so the LipSync can be made at the community level for less than $300.
@@ -86,7 +86,7 @@ Once a volunteer maker agrees to take on your request, communicate with them to 
     <td>LipSync Gaming Assembly Guide</td>
     <td>1.6</td>
     <td>PDF</td>
-    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Documentation/LipSync_Gaming_Assembly_Guide.pdf">LipSync_Gaming_Assembly_Guide.pdf</a></td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Documentation/LipSync_Assembly_Guide.pdf">LipSync_Assembly_Guide.pdf</a></td>
   </tr>
   <tr>
     <td>LipSync Gaming Startup Guide</td>
@@ -104,7 +104,7 @@ Once a volunteer maker agrees to take on your request, communicate with them to 
      <td>LipSync Gaming Mounting Guide</td>
      <td>1.0</td>
      <td>PDF</td>
-     <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Documentation/LipSync_Mounting_Guide.pdf">Mounting_Document.pdf</a></td>
+     <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Documentation/LipSync_Mounting_Guide.pdf">LipSync_Mounting_Guide.pdf</a></td>
   </tr>
   <tr>
     <td>LipSync Gaming BOM (XLSX)</td>
