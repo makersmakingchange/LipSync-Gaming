@@ -1,9 +1,17 @@
 ## LipSync Gaming
 
-The LipSync is an assistive technology device which is being developed to allow quadriplegics and other people with limited hand use the ability to use touchscreen mobile devices by manipulation of a mouth-operated joystick with integrated sip and puff controls. We are releasing all of our work open-source, to make the Lipsync a solution that can be made at the community level for less than $300.
+<p align="center">
+<img align="center" src="https://raw.githubusercontent.com/makersmakingchange/blog/gh-pages/_resources/images/LipSync-Gaming_Logo.jpg" width="50%" height="50%" alt="LipSync-Gaming Logo"/>
+</p>
 
-This GitHub repository will serve as a database for all software files associated with the LipSync Gaming..
+The LipSync is an assistive technology device that allows quadriplegics and other people with limited hand function to use touchscreen mobile devices, tablets, and computers by manipulation of a mouth-operated joystick with integrated sip and puff controls. This is an Open-Source Hardware project, so the LipSync can be made at the community level for less than $300.
 
+This GitHub repository will serve as a database for all files and documentation associated with the LipSync Gaming project.
+
+## More info at
+
+- [Makers Making Change Project Page](https://makersmakingchange.com/project/lipsyncgaming/)
+- [Makers Making Change Forum Thread](https://makersmakingchange.com/forum/topic/lipsync-gaming/)
 
 ## Compatibility 
 
@@ -15,15 +23,47 @@ This GitHub repository will serve as a database for all software files associate
     <th>Additional Information</th>
   <tr>
     <td>iOS</td>
-    <td>7-12</td>
-    <td>2014</td>
-    <td>Compatible with iOS7-12 using Switch Control. For iOS13+ or iPadOS, see <i>LipSync</i> or <i>LipSync Wireless.</i></td>
+    <td>13.1</td>
+    <td>September 19,2019</td>
+    <td>Compatible with iPhone 7 and newer versions (Requires USB to Lightning or USB to USB-C Adapter)</td>
+  </tr>
+  <tr>
+    <td>Windows</td>
+    <td>XP,7,10</td>
+    <td>2001</td>
+    <td>Compatible with Windows XP and newer versions</td>
   </tr>
   <tr>
     <td>Android</td>
-    <td>5+</td>
-    <td>2014</td>
-    <td>Requires enabling Switch Access or Universal Switch accessibility feature.</td>
+    <td>4-9</td>
+    <td>Released 2013</td>
+    <td>Compatible with Android 4 and newer versions (Requires USB On-The-Go)</td>
+  </tr>
+  <tr>
+    <td>MacOS</td>
+    <td>10</td>
+    <td>Released 2000</td>
+    <td>Compatible with Mac OS X 10.0 and newer versions</td>
+  </tr>
+  </table> 
+
+## Getting Started
+There are several options for obtaining a LipSync Gaming device.
+1. Build it yourself
+2. Request a volunteer maker to build one for you.
+
+### 1. Build it Yourself
+All the information you need to build a LipSync is avaiable in this repository. You'll need to order a number of off-the-shelf components, order a set of custom printed circuit boards and 3D print a number of components.
+
+### 2. Volunteer Build
+You can submit a build request through the Makers Making Change Website. A volunteer maker will build a LipSync and the requestor is responsible for the cost of materials and any shipping.
+
+First, you'll need to [sign up](https://www.makersmakingchange.com/sign-up/) to create an account. Once your account is activated, you can log in.
+
+Second, [submit a build request](https://makersmakingchange.com/request-a-build?project_id=3376) for a LipSync Gaming.
+
+Once a volunteer maker agrees to take on your request, communicate with them to discuss details and reimbursement.
+
 
 
 
@@ -35,121 +75,167 @@ This GitHub repository will serve as a database for all software files associate
     <th>Version</th>
     <th>Format</th>
     <th>Link</th>
-  <tr>
-    <td>Assembly Manual</td>
-    <td>1.5</td>
-    <td>PDF</td>
-    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/master/LipSync_Manual.pdf">LipSync_Manual.pdf</a></td>
+  </tr>
+    <tr>
+    <td>LipSync Gaming All</td>
+    <td>3.0</td>
+    <td>ZIP</td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/archive/refs/heads/develop.zip">LipSync-Gaming.zip</a></td>
   </tr>
   <tr>
-    <td>LipSync Gaming Setup Guide</td>
-    <td>1.2</td>
+    <td>LipSync Gaming Assembly Guide</td>
+    <td>1.6</td>
     <td>PDF</td>
-    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/master/LipSync_Gaming_Setup_Guide.pdf">LipSync_Gaming_Setup_Guide.pdf</a></td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Documentation/LipSync_Gaming_Assembly_Guide.pdf">LipSync_Gaming_Assembly_Guide.pdf</a></td>
+  </tr>
+  <tr>
+    <td>LipSync Gaming Startup Guide</td>
+    <td>1.6</td>
+    <td>PDF</td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Documentation/LipSync_Gaming_Startup_Guide.pdf">LipSync_Gaming_Startup_Guide.pdf</a></td>
   </tr>
   <tr>
     <td>LipSync Gaming User Guide</td>
-    <td>1.2</td>
+    <td>1.1</td>
     <td>PDF</td>
-    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/master/LipSync_Gaming_User_Guide.pdf">LipSync_Gaming_User_Guide.pdf</a></td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Documentation/LipSync_Gaming_User_Guide.pdf">LipSync_Gaming_User_Guide.pdf</a></td>
   </tr>
   <tr>
-     <td>Mounting Document</td>
+     <td>LipSync Gaming Mounting Guide</td>
      <td>1.0</td>
      <td>PDF</td>
-     <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/master/Mounting_Document.pdf">Mounting_Document.pdf</a></td>
+     <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Documentation/LipSync_Mounting_Guide.pdf">Mounting_Document.pdf</a></td>
   </tr>
   <tr>
     <td>LipSync Gaming BOM (XLSX)</td>
-    <td>September 16, 2019</td>
+    <td>September 1, 2021</td>
     <td>XLSX</td>
-    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/raw/master/LipSync_Gaming_BOM.xlsx">LipSync_Gaming_BOM.xlsx</a></td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Documentation/LipSync_Gaming_BOM.xlsx">LipSync_Gaming_BOM.xlsx</a></td>
   </tr>
   <tr>
     <td>LipSync Gaming BOM (CSV)</td>
-    <td>September 16, 2019</td>
+    <td>September 1, 2021</td>
     <td>CSV</td>
-    <td><a href="https://raw.githubusercontent.com/makersmakingchange/LipSync-Gaming/master/LipSync_Gaming_BOM.csv" download target="_blank">LipSync_Gaming_BOM.csv</a></td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Documentation/LipSync_Gaming_BOM.csv">LipSync_Gaming_BOM.csv</a></td>
   </tr>
   <tr>
     <td>LipSync Gaming Firmware</td>
-    <td>1.16</td>
+    <td>3.0-beta</td>
     <td>INO</td>
-    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/raw/master/Software/LipSync_Gaming_Firmware/LipSync_Gaming_Firmware.ino">LipSync_Gaming_Firmware.ino</a></td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Software/LipSync_Gaming_Firmware/LipSync_Gaming_Firmware.ino">LipSync_Gaming_Firmware.ino</a></td>
   </tr>
   <tr>
-    <td>Interface Board Layout</td>
+    <td>LipSync Gaming Interface Board Layout</td>
     <td>2.71</td>
     <td>BRD</td>
     <td><a href="https://raw.githubusercontent.com/makersmakingchange/LipSync-Gaming/master/Hardware/PCB_design/Eagle/LipSync_Interface_Board/LipSync_Interface_Board.brd">LipSync_Interface_Board.brd</a></td>
   </tr>
   <tr>
-    <td>Interface Board Schematic</td>
+    <td>LipSync Gaming Interface Board Schematic</td>
     <td>2.71</td>
     <td>SCH</td>
-    <td><a href="https://raw.githubusercontent.com/makersmakingchange/LipSync-Gaming/master/Hardware/PCB_design/Eagle/LipSync_Interface_Board/LipSync_Interface_Board.sch">LipSync_Interface_Board.sch</a></td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Hardware/PCB_design/Eagle/LipSync_Interface_Board/LipSync_Interface_Board.brd">LipSync_Interface_Board.sch</a></td>
   </tr>
   <tr>
-    <td>JLCPCB LipSync Interface Board Gerber</td>
+    <td>JLCPCB LipSync Gaming Interface Board Gerber</td>
     <td>2.71</td>
     <td>ZIP</td>
-    <td><a href="https://raw.githubusercontent.com/makersmakingchange/LipSync-Gaming/master/Hardware/PCB_design/Gerber/LipSync_Interface_Board/JLCPCB_LipSync_Interface_Board.zip">JLCPCB_LipSync_Interface_Board.zip</a></td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Hardware/PCB_design/Gerber/LipSync_Interface_Board/JLCPCB_LipSync_Interface_Board.zip">JLCPCB_LipSync_Interface_Board.zip</a></td>
   </tr>
   <tr>
-    <td>OSHPark LipSync Interface Board Gerber</td>
+    <td>OSHPark LipSync Gaming Interface Board Gerber</td>
     <td>2.71</td>
     <td>ZIP</td>
-    <td><a href="https://raw.githubusercontent.com/makersmakingchange/LipSync-Gaming/master/Hardware/PCB_design/Gerber/LipSync_Interface_Board/OSHPark_LipSync_Interface_Board.zip">OSHPark_LipSync_Interface_Board.zip</a></td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Hardware/PCB_design/Gerber/LipSync_Interface_Board/OSHPark_LipSync_Interface_Board.zip">OSHPark_LipSync_Interface_Board.zip</a></td>
   </tr>
   <tr>
-    <td>PCBWay LipSync Interface Board Gerber</td>
+    <td>PCBWay LipSync Gaming Interface Board Gerber</td>
     <td>2.71</td>
     <td>ZIP</td>
-    <td><a href="https://raw.githubusercontent.com/makersmakingchange/LipSync-Gaming/master/Hardware/PCB_design/Gerber/LipSync_Interface_Board/PCBWay_LipSync_Interface_Board.zip">PCBWay_LipSync_Interface_Board.zip</a></td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Hardware/PCB_design/Gerber/LipSync_Interface_Board/PCBWay_LipSync_Interface_Board.zip">PCBWay_LipSync_Interface_Board.zip</a></td>
   </tr>
   <tr>
-    <td>Seeed Fusion LipSync Interface Board Gerber</td>
+    <td>Seeed Fusion LipSync Gaming Interface Board Gerber</td>
     <td>2.71</td>
     <td>ZIP</td>
-    <td><a href="https://raw.githubusercontent.com/makersmakingchange/LipSync-Gaming/master/Hardware/PCB_design/Gerber/LipSync_Interface_Board/Seeed_Fusion_LipSync_Interface_Board.zip">Seeed_Fusion_LipSync_Interface_Board.zip</a></td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Hardware/PCB_design/Gerber/LipSync_Interface_Board/Seeed_Fusion_LipSync_Interface_Board.zip">Seeed_Fusion_LipSync_Interface_Board.zip</a></td>
   </tr>
   <tr>
-    <td rowspan="9">Housing Design</td>
-    <td rowspan="9">2.2d</td>
+    <td rowspan="9">Housing_design</td>
+    <td rowspan="9">3.0</td>
     <td rowspan="9">STL</td>
-    <td><a href="https://raw.githubusercontent.com/makersmakingchange/LipSync-Gaming/master/Hardware/Housing_design/LipSync_Button.STL">LipSync_Button.STL</a></td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Hardware/Housing_design/LipSync_Button.stl">LipSync_Button.STL</a></td>
   </tr>
   <tr>
-  <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/raw/master/Hardware/Housing_design/LipSync_Front_Housing.STL">LipSync_Front_Housing.STL</a></td>
+  <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Hardware/Housing_design/LipSync_Front_Housing.STL">LipSync_Front_Housing.STL</a></td>
   </tr>
   <tr>
-	<td><a href="https://github.com/makersmakingchange/LipSync-Gaming/raw/master/Hardware/Housing_design/LipSync_Joystick_Base.STL">LipSync_Joystick_Base.STL</a></td>
+	<td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Hardware/Housing_design/LipSync_Joystick_Base.STL">LipSync_Joystick_Base.STL</a></td>
 </tr>
 <tr>
-  <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/raw/master/Hardware/Housing_design/LipSync_Joystick_Front.STL">LipSync_Joystick_Front.STL</a></td>
+  <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Hardware/Housing_design/LipSync_Joystick_Front.STL">LipSync_Joystick_Front.STL</a></td>
 </tr>
 <tr>
-  <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/raw/master/Hardware/Housing_design/LipSync_Joystick_Rocker.STL">LipSync_Joystick_Rocker.STL</a></td>
+  <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Hardware/Housing_design/LipSync_Joystick_Rocker.STL">LipSync_Joystick_Rocker.STL</a></td>
 </tr>
 <tr>
-    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/master/Hardware/Housing_design/LipSync_Joystick_Stand.STL">LipSync_Joystick_Stand.STL</a></td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Hardware/Housing_design/Optional/LipSync_Joystick_Jig.STL">LipSync_Joystick_Jig.STL</a></td>
 </tr>
 <tr>
-  <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/raw/master/Hardware/Housing_design/LipSync_Rear_Housing.stl">LipSync_Rear_Housing.STL</a></td>
+  <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Hardware/Housing_design/LipSync_Rear_Housing.STL">LipSync_Rear_Housing.STL</a></td>
 </tr>
 <tr>
-  <td><a href="https://raw.githubusercontent.com/makersmakingchange/LipSync-Gaming/master/Hardware/Housing_design/Print_Settings.txt">Print_Settings.txt</a></td>
+  <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Hardware/Housing_design/3D_Print_Settings.txt">3D_Print_Settings.txt</a></td>
 </tr>
 </table> 
 
-## Updates 
-For latest updates regarding the project we encourage you to visit our <a href="https://www.makersmakingchange.com/">website</a> and <a href="https://hackaday.io/project/13424-lipsync">Hackaday</a> page.
+## Resources
 
+<table style="width:100%">
+  <tr>
+    <th>Resource</th>
+    <th>Link</th>
+  </tr>
+  <tr>
+    <td>LipSync Firmware and Calibration Video</td>
+    <td><a href="https://www.youtube.com/watch?v=RnpA24WH0Qk">Video</a></td>
+  <tr>
+    <td>LipSync Joystick Calibration Video</td>
+    <td><a href="https://www.youtube.com/watch?v=Daf-54y6SBg">Video</a></td>
+  </tr>
+    <tr>
+    <td>LipSync Build Video</td>
+    <td><a href="https://www.youtube.com/watch?v=lBXpbkp5DW4&list=PLhoPg9bDvBR4CSFRfNbQ87ALnfaHOyM3C">Video</a></td>
+  </tr>
+</table> 
 
-## Contact Us
+## License
+<br>
+<p align="center">
+<a href="https://www.oshwa.org">
+	<img align="center" src="http://www.oshwa.org/wp-content/uploads/2014/03/oshw-logo-200-px.png" alt="Open Source Hardware Logo"/></a>
+</p>
 
-For technical questions, to get involved or share your LipSync experience we encourage you to contact info@makersmakingchange.com
+<p align="center">
+This is an open source hardware project and adheres to the Open Source Hardware (OSHW) Statement of Principle 1.0 and Open Source Hardware (OSHW) Definition 1.0 found at <a href="http://www.oshwa.org">www.oshwa.org</a>
+</p>
 
+## About Makers Making Change
+<img src="https://www.makersmakingchange.com/wp-content/uploads/logo/mmc_logo.svg" width="500" alt="Makers Making Change Logo">
 
+Makers Making Change is an initiative of [Neil Squire](https://www.neilsquire.ca/), a Canadian non-profit that helps people with disabilities.
 
+We are committed to creating a network of volunteer makers who support people with disabilities in their communities through building cost-effective assistive devices. Check out our library of free, open-source assistive technologies with parts and build instructions.
+
+ - [www.MakersMakingChange.com](https://www.makersmakingchange.com/)
+ - [GitHub](https://github.com/makersmakingchange)
+ - [Thingiverse](https://www.thingiverse.com/makersmakingchange/about)
+ - Twitter: [@makermakechange](https://twitter.com/makermakechange)
+ - Instagram: [@makersmakingchange](https://www.instagram.com/makersmakingchange)
+
+### Contact Us
+
+For technical questions, to get involved, or share your experience we encourage you to visit the [MMC Device Page](https://makersmakingchange.com/assistive-devices/), [MMC Forum](https://makersmakingchange.com/forum/), or contact info@makersmakingchange.com
+
+<hr>
 
