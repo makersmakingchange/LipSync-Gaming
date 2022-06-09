@@ -128,13 +128,13 @@ Once a volunteer maker agrees to take on your request, communicate with them to 
     <td>LipSync Gaming Interface Board Layout</td>
     <td>2.71</td>
     <td>BRD</td>
-    <td><a href="https://raw.githubusercontent.com/makersmakingchange/LipSync-Gaming/master/Hardware/PCB_design/Eagle/LipSync_Interface_Board/LipSync_Interface_Board.brd">LipSync_Interface_Board.brd</a></td>
+    <td><a href="https://raw.githubusercontent.com/makersmakingchange/LipSync-Gaming/develop/Hardware/PCB_design/Eagle/LipSync_Interface_Board/LipSync_Interface_Board.brd">LipSync_Interface_Board.brd</a></td>
   </tr>
   <tr>
     <td>LipSync Gaming Interface Board Schematic</td>
     <td>2.71</td>
     <td>SCH</td>
-    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Hardware/PCB_design/Eagle/LipSync_Interface_Board/LipSync_Interface_Board.brd">LipSync_Interface_Board.sch</a></td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/develop/Hardware/PCB_design/Eagle/LipSync_Interface_Board/LipSync_Interface_Board.brd">LipSync_Interface_Board.sch</a></td>
   </tr>
   <tr>
     <td>JLCPCB LipSync Gaming Interface Board Gerber</td>
