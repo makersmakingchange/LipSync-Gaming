@@ -102,7 +102,7 @@
 #define PUFF_PRESSURE_THRESHOLD_MAX (byte)50      // Maximum Pressure sip and puff threshold [percentage]
 #define INPUT_ACTION_COUNT 6                      // Number of available sip and puff input types  
 #define JOYSTICK_LIFT_THRESOLD 400                // Opposite FSR value nearing liftoff during purposeful movement [ADC steps]
-#define JOYSTICK_MAX_DEADZONE 99                  // Joystick maximum allowed deadzone {ADC steps]
+#define JOYSTICK_MAX_DEADZONE 250                 // Joystick maximum allowed deadzone {ADC steps]
 #define BUTTON_MODE 1                             // Set button mode ( 1 = Digital buttons , 2 = Analog buttons )
 
 #define JS_MAPPED_IN_DEADZONE 0.50
@@ -128,7 +128,7 @@ int BUTTON_MAPPING[INPUT_ACTION_COUNT] =
 #define API_OKAY_RESPONSE 0
 #define API_COMMAND_MISSING_RESPONSE 1
 #define API_INCORRECT_FORMAT_RESPONSE 2
-#define API_INCORRECT_PARAMETER_RESPONSE 3    
+#define API_INCORRECT_PARAMETER_RESPONSE 3 
 
 //***PIN ASSIGNMENTS***// - DO NOT CHANGE
 #define LED_GREEN_PIN 4                           // LipSync LED Color1 : GREEN - digital output pin 5
@@ -183,7 +183,7 @@ const byte UNUSED_PINS[] = {2,                    // Unused pins
 #define EEPROM_changeTolerance    58                  // int:58,59;
 #define EEPROM_versionNumber      60                  // int:60,61; 
 //#define EEPROM_scrollLevel      62                  // int:62,63; 
-//#define EEPROM_rawModeEnabled     64                  // int:64,65;
+//#define EEPROM_rawModeEnabled   64                  // int:64,65;
 
 //***JOYSTICK FUNCTIONS***// - DO NOT CHANGE
 //Structure for a degree five polynomial 
@@ -193,7 +193,7 @@ typedef struct {
   float _equationCCoef;
   float _equationDCoef;
   float _equationECoef;
-  float _equationFCoef;
+  //Coefficient E is 0.00
 } _equationCoef;
 
 
@@ -204,18 +204,17 @@ _equationCoef g_yHighEquation = {};
 _equationCoef g_yLowEquation = {};
 
 //The input to output (x to y) curve equation using degree five polynomial equation for each sensitivity level
-_equationCoef g_levelEquation1 = {0.0004,-0.0041,0.0000,-0.0185,1.8000,0.0000};
-_equationCoef g_levelEquation2 = {0.0002,-0.0021,0.0201,-0.3704,4.3000,0.0000};
-_equationCoef g_levelEquation3 = {-0.0008,0.0314,-0.3565,1.2731,3.6056,0.0000};
-_equationCoef g_levelEquation4 = {0.0001,-0.0005,0.0309,-0.4954,7.2167,0.0000};
-_equationCoef g_levelEquation5 = {-0.0004,0.0175,-0.2145,1.0093,5.1333,0.0000};
-_equationCoef g_levelEquation6 = {0.0000,0.0000,0.0000,0.0000,8.4667,0.0000};
-_equationCoef g_levelEquation7 = {-0.0001,0.0062,-0.125,0.7778,9.3000,0.0000};
-_equationCoef g_levelEquation8 = {-0.0004,0.0195,-0.3133,1.6574,10.6889,0.0000};
-_equationCoef g_levelEquation9 = {0.0001,-0.0010,0.0093,-0.9907,21.2444,0.0000};
-_equationCoef g_levelEquation10 = {0.0008,-0.0303,0.5062,-5.1157,35.5500,0.0000};
-_equationCoef g_levelEquation11 = {-0.0001,-0.0051,0.3441,-6.1204,45.4111,0.0000};
-
+_equationCoef g_levelEquation1 = {0.0004,-0.0041,0.0000,-0.0185,1.8000};
+_equationCoef g_levelEquation2 = {0.0002,-0.0021,0.0201,-0.3704,4.3000};
+_equationCoef g_levelEquation3 = {-0.0008,0.0314,-0.3565,1.2731,3.6056};
+_equationCoef g_levelEquation4 = {0.0001,-0.0005,0.0309,-0.4954,7.2167};
+_equationCoef g_levelEquation5 = {-0.0004,0.0175,-0.2145,1.0093,5.1333};
+_equationCoef g_levelEquation6 = {0.0000,0.0000,0.0000,0.0000,8.4667};
+_equationCoef g_levelEquation7 = {-0.0001,0.0062,-0.125,0.7778,9.3000};
+_equationCoef g_levelEquation8 = {-0.0004,0.0195,-0.3133,1.6574,10.6889};
+_equationCoef g_levelEquation9 = {0.0001,-0.0010,0.0093,-0.9907,21.2444};
+_equationCoef g_levelEquation10 = {0.0008,-0.0303,0.5062,-5.1157,35.5500};
+_equationCoef g_levelEquation11 = {-0.0001,-0.0051,0.3441,-6.1204,45.4111};
 
 //All sensitivity levels
 _equationCoef g_levelEquations[11] = {g_levelEquation1, g_levelEquation2, g_levelEquation3, g_levelEquation4, g_levelEquation5, g_levelEquation6, g_levelEquation7, g_levelEquation8, g_levelEquation9, g_levelEquation10, g_levelEquation11};
@@ -645,7 +644,8 @@ int getXYValue(float rawValue, int deadzoneOutputValue , int maxOutputValue, _eq
 {
   int xySign = sgn(rawValue);                                                 //Get the sign of input
   rawValue = abs(rawValue);                                                   //Solve for output regardless of the input sign and multiply the output by the sign ( the polynomial in quadrant 1 and 3 )
-  int xyValue = (int)((equationCoef._equationACoef*pow(rawValue,5))+(equationCoef._equationBCoef*pow(rawValue,4))+(equationCoef._equationCCoef*pow(rawValue,3))+(equationCoef._equationDCoef*pow(rawValue,2))+(equationCoef._equationECoef*rawValue)+equationCoef._equationFCoef);
+  int xyValue = (int)((equationCoef._equationACoef*pow(rawValue,5))+(equationCoef._equationBCoef*pow(rawValue,4))+(equationCoef._equationCCoef*pow(rawValue,3))+(equationCoef._equationDCoef*pow(rawValue,2))+(equationCoef._equationECoef*rawValue));
+                                                                              //Coefficient E is 0.00
   delay(1);                                                                   //The points in quadrant 1 and 3 only (mirror (+,+) to (-,-) )
   xyValue = (xyValue >= maxOutputValue-deadzoneOutputValue) ? maxOutputValue: (xyValue<=deadzoneOutputValue) ? 0: xyValue;        //Set output value to maximum value if it's in maximum deadzone area and set output value to center value if it's in center deadzone area 
   delay(1);
@@ -725,7 +725,7 @@ _equationCoef setFSREquation(int x1,int x2,int y1,int y2)
   float eValue = (y1Value/x1Value)-dValue*x1Value;
 
   //Output coefficients ( all others are zero )
-  _equationCoef resultFactor = {0.00, 0.00, 0.00, dValue, eValue, 0.00};
+  _equationCoef resultFactor = {0.00, 0.00, 0.00, dValue, eValue};
   return resultFactor;
 }
 
