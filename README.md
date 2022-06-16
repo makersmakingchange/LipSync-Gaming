@@ -86,7 +86,7 @@ Once a volunteer maker agrees to take on your request, communicate with them to 
     <td>LipSync Assembly Guide</td>
     <td>1.6</td>
     <td>PDF</td>
-    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Documentation/LipSync_Manual.pdf">LipSync_Assembly_Guide.pdf</a></td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Documentation/LipSync_Assembly_Guide.pdf">LipSync_Assembly_Guide.pdf</a></td>
   </tr>
   <tr>
     <td>LipSync Gaming Startup Guide</td>
@@ -120,45 +120,45 @@ Once a volunteer maker agrees to take on your request, communicate with them to 
   </tr>
   <tr>
     <td>LipSync Gaming Firmware</td>
-    <td>3.0-beta</td>
+    <td>3.0</td>
     <td>INO</td>
-    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Software/LipSync_Gaming_Firmware/LipSync_Gaming_Firmware.ino">LipSync_Gaming_Firmware.ino</a></td>
+    <td><a href="https://raw.githubusercontent.com/makersmakingchange/LipSync-Gaming/develop/Software/LipSync_Gaming_Firmware/LipSync_Gaming_Firmware.ino">LipSync_Gaming_Firmware.ino</a></td>
   </tr>
   <tr>
     <td>LipSync Gaming Interface Board Layout</td>
     <td>2.71</td>
     <td>BRD</td>
-    <td><a href="https://raw.githubusercontent.com/makersmakingchange/LipSync-Gaming/develop/Hardware/PCB_design/Eagle/LipSync_Interface_Board/LipSync_Interface_Board.brd">LipSync_Interface_Board.brd</a></td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/raw/develop/Hardware/PCB_design/Eagle/LipSync_Interface_Board/LipSync_Interface_Board.brd">LipSync_Interface_Board.brd</a></td>
   </tr>
   <tr>
     <td>LipSync Gaming Interface Board Schematic</td>
     <td>2.71</td>
     <td>SCH</td>
-    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/develop/Hardware/PCB_design/Eagle/LipSync_Interface_Board/LipSync_Interface_Board.brd">LipSync_Interface_Board.sch</a></td>
+    <td><a href="https://raw.githubusercontent.com/makersmakingchange/LipSync-Gaming/develop/Hardware/PCB_design/Eagle/LipSync_Interface_Board/LipSync_Interface_Board.sch">LipSync_Interface_Board.sch</a></td>
   </tr>
   <tr>
     <td>JLCPCB LipSync Gaming Interface Board Gerber</td>
     <td>2.71</td>
     <td>ZIP</td>
-    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Hardware/PCB_design/Gerber/LipSync_Interface_Board/JLCPCB_LipSync_Interface_Board.zip">JLCPCB_LipSync_Interface_Board.zip</a></td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/raw/develop/Hardware/PCB_design/Gerber/LipSync_Interface_Board/JLCPCB_LipSync_Interface_Board.zip">JLCPCB_LipSync_Interface_Board.zip</a></td>
   </tr>
   <tr>
     <td>OSHPark LipSync Gaming Interface Board Gerber</td>
     <td>2.71</td>
     <td>ZIP</td>
-    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Hardware/PCB_design/Gerber/LipSync_Interface_Board/OSHPark_LipSync_Interface_Board.zip">OSHPark_LipSync_Interface_Board.zip</a></td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/raw/develop/Hardware/PCB_design/Gerber/LipSync_Interface_Board/OSHPark_LipSync_Interface_Board.zip">OSHPark_LipSync_Interface_Board.zip</a></td>
   </tr>
   <tr>
     <td>PCBWay LipSync Gaming Interface Board Gerber</td>
     <td>2.71</td>
     <td>ZIP</td>
-    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Hardware/PCB_design/Gerber/LipSync_Interface_Board/PCBWay_LipSync_Interface_Board.zip">PCBWay_LipSync_Interface_Board.zip</a></td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/raw/develop/Hardware/PCB_design/Gerber/LipSync_Interface_Board/PCBWay_LipSync_Interface_Board.zip">PCBWay_LipSync_Interface_Board.zip</a></td>
   </tr>
   <tr>
     <td>Seeed Fusion LipSync Gaming Interface Board Gerber</td>
     <td>2.71</td>
     <td>ZIP</td>
-    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/develop/Hardware/PCB_design/Gerber/LipSync_Interface_Board/Seeed_Fusion_LipSync_Interface_Board.zip">Seeed_Fusion_LipSync_Interface_Board.zip</a></td>
+    <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/raw/develop/Hardware/PCB_design/Gerber/LipSync_Interface_Board/Seeed_Fusion_LipSync_Interface_Board.zip">Seeed_Fusion_LipSync_Interface_Board.zip</a></td>
   </tr>
   <tr>
     <td rowspan="9">Housing_design</td>
