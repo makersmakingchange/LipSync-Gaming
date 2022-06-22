@@ -2895,11 +2895,16 @@ void pushButtonHandler()
 { 
   if (digitalRead(BUTTON_UP_PIN) == LOW) {
     delay(250);
-    if (g_buttonPreviousState[0] == HIGH) {
+    if (digitalRead(BUTTON_DOWN_PIN) == LOW){
+      setJoystickCalibration(true, false);                                 // Call joystick calibration if both push button up and down are pressed
+      g_buttonPreviousState[0] = HIGH;
+      g_buttonPreviousState[1] = HIGH;      
+    }
+    else if (g_buttonPreviousState[0] == HIGH && digitalRead(BUTTON_DOWN_PIN) == HIGH) {
       // Up button pushed
       g_buttonTimer[0] = millis();
       g_buttonPreviousState[0] = LOW;
-      g_buttonPreviousState[1] = digitalRead(BUTTON_DOWN_PIN);
+      g_buttonPreviousState[1] = HIGH;
     } 
   } 
   else if (digitalRead(BUTTON_UP_PIN) == HIGH) {
@@ -2916,20 +2921,19 @@ void pushButtonHandler()
       g_buttonPreviousState[0] = HIGH;
       g_buttonPreviousState[1] = HIGH;
     } 
-    else if (g_buttonPreviousState[0] == LOW && digitalRead(BUTTON_DOWN_PIN) == HIGH && g_buttonPreviousState[1] == LOW) {
-      // Up and Down buttons were released
-      setJoystickCalibration(true, false);                                 // Call joystick calibration if both push button up and down are pressed
-      g_buttonPreviousState[0] = HIGH;
-      g_buttonPreviousState[1] = HIGH;
-    } 
   }
 
   if (digitalRead(BUTTON_DOWN_PIN) == LOW) {
     delay(250);
-    if (g_buttonPreviousState[1] == HIGH) {
+    if (digitalRead(BUTTON_UP_PIN) == LOW){
+      setJoystickCalibration(true, false);                                 // Call joystick calibration if both push button up and down are pressed
+      g_buttonPreviousState[0] = HIGH;
+      g_buttonPreviousState[1] = HIGH;      
+    }
+    else if (g_buttonPreviousState[1] == HIGH  && digitalRead(BUTTON_UP_PIN) == HIGH) {
       // Down button pushed
       g_buttonTimer[1] = millis();
-      g_buttonPreviousState[0] = digitalRead(BUTTON_UP_PIN);
+      g_buttonPreviousState[0] = HIGH;
       g_buttonPreviousState[1] = LOW;
     } 
   } 
@@ -2944,12 +2948,6 @@ void pushButtonHandler()
     else if (g_buttonPreviousState[1] == LOW && digitalRead(BUTTON_UP_PIN) == HIGH && g_buttonPreviousState[0] == HIGH && (millis() - g_buttonTimer[1] < BUTTON_LONG_PRESS_TIME)) {
       // Down button was released before 2 seconds ( button down short press)
       decreaseJoystickSensitivity(true, false);                            // Call decrease joystick sensitivity function if push button up is pressed                
-      g_buttonPreviousState[0] = HIGH;
-      g_buttonPreviousState[1] = HIGH;
-    } 
-    else if (g_buttonPreviousState[1] == LOW && digitalRead(BUTTON_UP_PIN) == HIGH && g_buttonPreviousState[0] == LOW) {
-      // Up and Down buttons were released
-      setJoystickCalibration(true, false);                                 // Call joystick calibration if both push button up and down are pressed
       g_buttonPreviousState[0] = HIGH;
       g_buttonPreviousState[1] = HIGH;
     } 
