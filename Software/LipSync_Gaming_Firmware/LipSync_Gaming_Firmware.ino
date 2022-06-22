@@ -88,6 +88,9 @@
 #define EEPROM_WRITE_DELAY (byte)10               // The delay after an EEPROM write [ms]
 #define PRESSURE_HANDLER_DELAY (byte)5            // The delay added between pressure read cycles [ms] 
 #define JOYSTICK_BUTTON_DELAY 150                 // The delay after a joystick button press before release
+#define BUTTON_LONG_PRESS_TIME 2000               // The time required to press a button to change button mode
+#define BUTTON_DIGITAL_MODE 1                     // The digital button mode
+#define BUTTON_ANALOG_MODE 2                      // The analog button mode
 
 //*** DRIFT REDUCTIONS ***// CHANGE WITH CAUTION
 #define JOYSTICK_DEADBAND 30                      // Joystick deadband {ADC steps]
@@ -103,13 +106,13 @@
 #define INPUT_ACTION_COUNT 6                      // Number of available sip and puff input types  
 #define JOYSTICK_LIFT_THRESOLD 400                // Opposite FSR value nearing liftoff during purposeful movement [ADC steps]
 #define JOYSTICK_MAX_DEADZONE 250                 // Joystick maximum allowed deadzone {ADC steps]
-#define BUTTON_MODE 1                             // Set button mode ( 1 = Digital buttons , 2 = Analog buttons )
+#define BUTTON_MODE BUTTON_DIGITAL_MODE           // Set button mode ( 1 = Digital button mode , 2 = Analog button mode )
 
-#define JS_MAPPED_IN_DEADZONE 0.50
-#define JS_MAPPED_IN_NEUTRAL 12
-#define JS_MAPPED_IN_MAX 16.00
-#define JS_OUT_DEAD_ZONE 1
-#define JS_OUT_MAX 127
+#define JS_MAPPED_IN_DEADZONE 0.50                // The deadzone value of mapped joystick values 
+#define JS_MAPPED_IN_NEUTRAL 12                   // Mapped neutral joystick value 
+#define JS_MAPPED_IN_MAX 16.00                    // Mapped maximum joystick value 
+#define JS_OUT_DEADZONE 1                         // Default output deadzone
+#define JS_OUT_MAX 127                            // Output maximum value 
 
 int BUTTON_MAPPING[INPUT_ACTION_COUNT] =
 { ACTION_SHORT_PUFF, ACTION_SHORT_SIP,  ACTION_LONG_PUFF,
@@ -248,8 +251,6 @@ _functionList getJoystickInitializationFunction = {"IN,0", 0, &getJoystickInitia
 _functionList setJoystickInitializationFunction = {"IN,1", 1, &setJoystickInitialization};
 _functionList getJoystickCalibrationFunction =    {"CA,0", 0, &getJoystickCalibration};
 _functionList setJoystickCalibrationFunction =    {"CA,1", 1, &setJoystickCalibration};
-_functionList getChangeToleranceFunction =        {"CT,0", 0, &getChangeTolerance};
-_functionList setChangeToleranceFunction =        {"CT,1", 1, &setChangeTolerance};
 _functionList getButtonMappingFunction =          {"MP,0", 0, &getButtonMapping};
 _functionList setButtonMappingFunction =          {"MP,1", 2, &setButtonMapping}; // 2 denotes an array parameter
 _functionList getDeadzoneFunction =               {"DZ,0", 0, &getDeadzone};
@@ -259,7 +260,7 @@ _functionList setButtonModeFunction =             {"BM,1", 1, &setButtonMode};
 _functionList factoryResetFunction =              {"FR,1", 1, &factoryReset};
 
 // Declare array of API functions
-_functionList apiFunction[27] =
+_functionList apiFunction[25] =
 {
   getModelNumberFunction,
   getVersionNumberFunction,
@@ -279,8 +280,6 @@ _functionList apiFunction[27] =
   setJoystickInitializationFunction,
   getJoystickCalibrationFunction,
   setJoystickCalibrationFunction,
-  getChangeToleranceFunction,
-  setChangeToleranceFunction,
   getButtonMappingFunction,
   setButtonMappingFunction,
   getDeadzoneFunction,
@@ -291,48 +290,50 @@ _functionList apiFunction[27] =
 };
 
 //***GLOBAL VARIABLE DECLARATION***//
-byte g_modelNumber;                                    // LipSync model number variable
-byte g_versionNumber;                                  // LipSync version number variable
+byte g_modelNumber;                                               // LipSync model number variable
+byte g_versionNumber;                                             // LipSync version number variable
 
-int g_actionButton[INPUT_ACTION_COUNT];                // Sip & Puff action mapping
+int g_actionButton[INPUT_ACTION_COUNT];                           // Sip & Puff action mapping
 
-int g_buttonMode;                                      //The button mode variable 
-int g_lastButtonState[6];  
+int g_buttonMode;                                                 // The button mode variable 
+int g_lastButtonState[6];                                         // Buttons last states 
 
-int g_rotationAngle = ROTATION_ANGLE;                  // Rotation angle variable (degrees)
-float g_rotationAngle11;                               // Rotation matrix components
+int g_rotationAngle = ROTATION_ANGLE;                             // Rotation angle variable (degrees)
+float g_rotationAngle11;                                          // Rotation matrix components
 float g_rotationAngle12;
 float g_rotationAngle21;
 float g_rotationAngle22;
 
-byte g_sensitivityCounter;                             // Variable to track current joystick sensitivity level
+byte g_sensitivityCounter;                                        // Variable to track current joystick sensitivity level
 
-int  g_joystickPressure;                               // Variable to hold pressure readings
-int  g_sipThreshold;                                   // Sip pressure threshold [ADC steps]
-int  g_puffThreshold;                                  // Puff pressure threshold [ADC steps]
+int  g_joystickPressure;                                          // Variable to hold pressure readings
+int  g_sipThreshold;                                              // Sip pressure threshold [ADC steps]
+int  g_puffThreshold;                                             // Puff pressure threshold [ADC steps]
 
-unsigned int g_puffCount, g_sipCount;                  // The puff and long sip incremental counter variables
+unsigned int g_puffCount, g_sipCount;                             // The puff and long sip incremental counter variables
 
 int g_xHighPrev, g_yHighPrev, g_xLowPrev, g_yLowPrev;             //Previous FSR reading variables                       
 int g_xHighNeutral, g_xLowNeutral, g_yHighNeutral, g_yLowNeutral; //Individual neutral starting positions for each FSR
 
-int g_xHighMax, g_xLowMax, g_yHighMax, g_yLowMax;         //Max FSR values which are set to the values from EEPROM
+int g_xHighMax, g_xLowMax, g_yHighMax, g_yLowMax;                 //Max FSR values which are set to the values from EEPROM
 
-float g_xHighMapped, g_xLowMapped, g_yHighMapped, g_yLowMapped;
+float g_xHighMapped, g_xLowMapped, g_yHighMapped, g_yLowMapped;   //FSR Mapped value 
  
-float g_xDelta, g_yDelta;                               //Calculate the x and y delta values
+float g_xDelta, g_yDelta;                                         //Calculate the x and y delta values
       
 
-const float g_deadband = JOYSTICK_DEADBAND; 			// Deadband distance from center
-int g_deadzone;                                        //Declare joystick deadzone variable 
+const float g_deadband = JOYSTICK_DEADBAND; 			                // Deadband distance from center
+int g_deadzone;                                                   // Declare joystick deadzone variable 
 
-int g_changeTolerance;                                 // The tolerance of changes in FSRs readings
+int g_changeTolerance = CHANGE_DEFAULT_TOLERANCE;                 // The tolerance of changes in FSRs readings
 
-bool g_debugModeEnabled;                               // Declare debug enable variable
-bool g_settingsEnabled = false;                        // Serial input settings command mode enabled or disabled
+bool g_debugModeEnabled;                                          // Declare debug enable variable
+bool g_settingsEnabled = false;                                   // Serial input settings command mode enabled or disabled
+
+unsigned long g_buttonTimer[2] = {0, 0};                          // Buttons time array 
+bool g_buttonPreviousState[2] = {HIGH,HIGH};                      // Previous state of buttons
 
 //Defining the joystick REPORT_ID and profile type
-
 Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID, 
   JOYSTICK_TYPE_JOYSTICK, 8, 0,
   true, true, false, 
@@ -362,8 +363,6 @@ void setup() {
 
   getJoystickCalibration(false, false);                    // Get FSR Max calibration values
 
-  g_changeTolerance = getChangeTolerance(false, false);    // Get change tolerance using max FSR readings and default tolerance
-
   getFSREquation();                                        //Get FSR equations
   
   getSipThreshold(false, false);                           // Get the pressure sensor threshold boundaries
@@ -375,7 +374,7 @@ void setup() {
 
   g_deadzone = getDeadzone(false, false);                  //Get the deadzone value 
 
-  g_buttonMode = getButtonMode(false , false);                     //Get saved joystick button mode parameter from EEPROM
+  g_buttonMode = getButtonMode(false , false);             //Get saved joystick button mode parameter from EEPROM
 
   getButtonMapping(false, false);                          // Get the input buttons to actions mappings
 
@@ -579,8 +578,8 @@ bool readJoystick(int &xJoy, int &yJoy, int &xHigh, int &xLow, int &yHigh, int &
     g_yDelta = g_yHighMapped - g_yLowMapped;   
       
     //Get the final X and Y output values for Joystick set axis function
-    xJoy = getXYValue(g_xDelta, JS_OUT_DEAD_ZONE, JS_OUT_MAX, g_levelEquations[g_sensitivityCounter]);
-    yJoy = getXYValue(g_yDelta, JS_OUT_DEAD_ZONE, JS_OUT_MAX, g_levelEquations[g_sensitivityCounter]);
+    xJoy = getXYValue(g_xDelta, JS_OUT_DEADZONE, JS_OUT_MAX, g_levelEquations[g_sensitivityCounter]);
+    yJoy = getXYValue(g_yDelta, JS_OUT_DEADZONE, JS_OUT_MAX, g_levelEquations[g_sensitivityCounter]);
  
   } //end check deadband 
   else {
@@ -1828,118 +1827,6 @@ void setJoystickCalibration(bool responseEnabled, bool apiEnabled, int* optional
   }
 }
 
-
-//*** GET CHANGE TOLERANCE VALUE CALIBRATION FUNCTION***//
-/// Function   : getChangeTolerance
-//
-// Description: This function retrieves the current change tolerance.
-//
-// Parameters :  responseEnabled : bool : The response for serial printing is enabled if it's set to true.
-//                                        The serial printing is ignored if it's set to false.
-//               apiEnabled : bool : The API response is sent if it's set to true.
-//                                   Manual response is sent if it's set to false.
-//
-// Return     : tempChangeTolerance : int : The current change tolerance.
-//*********************************//
-int getChangeTolerance(bool responseEnabled, bool apiEnabled)
-{
-  int tempChangeTolerance = CHANGE_DEFAULT_TOLERANCE;
-
-  if (API_ENABLED)
-  {
-    //Get the change tolerance from memory
-    EEPROM.get(EEPROM_changeTolerance, tempChangeTolerance);
-  }
-  else
-  {
-    tempChangeTolerance = CHANGE_DEFAULT_TOLERANCE;
-  }
-  printResponseSingle(responseEnabled, apiEnabled, true, 0, "CT,0", true, tempChangeTolerance);
-  return tempChangeTolerance;
-}
-
-
-//***GET CHANGE TOLERANCE VALUE CALIBRATION API FUNCTION***//
-// Function   : getChangeTolerance
-//
-// Description: This function is redefinition of main getChangeTolerance function to match the types of API function arguments.
-//
-// Parameters :  responseEnabled : bool : The response for serial printing is enabled if it's set to true.
-//                                        The serial printing is ignored if it's set to false.
-//               apiEnabled : bool : The API response is sent if it's set to true.
-//                                   Manual response is sent if it's set to false.
-//               optionalArray : int* : The array of int which should contain one element with value of zero.
-//
-// Return     : void
-void getChangeTolerance(bool responseEnabled, bool apiEnabled, int* optionalArray)
-{
-  if (optionalArray[0] == 0)
-  {
-    getChangeTolerance(responseEnabled, apiEnabled);
-  }
-}
-
-
-//***SET CHANGE TOLERANCE VALUE CALIBRATION FUNCTION***///
-// Function   : setChangeTolerance
-//
-// Description: This function sets a new change tolerance [ 0 - 30 ].
-//
-// Parameters :  responseEnabled : bool : The response for serial printing is enabled if it's set to true.
-//                                        The serial printing is ignored if it's set to false.
-//               apiEnabled : bool : The API response is sent if it's set to true.
-//                                   Manual response is sent if it's set to false.
-//               inputChangeTolerance : int : The input change tolerance requested.
-//
-// Return     : void
-//*********************************//
-void setChangeTolerance(bool responseEnabled, bool apiEnabled, int inputChangeTolerance)
-{
-  bool isValidChangeTolerance = true;
-
-  if (inputChangeTolerance >= 0 && inputChangeTolerance <= JOYSTICK_DEADBAND)
-  {
-    g_changeTolerance = inputChangeTolerance;                           // Update value to global variable
-    EEPROM.put(EEPROM_changeTolerance, g_changeTolerance);              // Update value to memory from serial input
-    delay(EEPROM_WRITE_DELAY);
-    if(!API_ENABLED) {g_changeTolerance = CHANGE_DEFAULT_TOLERANCE; }   //Use default change tolerance if bad serial input
-    isValidChangeTolerance = true;
-  }
-  else
-  {
-    isValidChangeTolerance = false;
-  }
-  delay(5);
-  int responseCode = 0; // TODO change to byte?
-  (isValidChangeTolerance) ? responseCode = 0 : responseCode = 3;
-  printResponseSingle(responseEnabled,
-          						apiEnabled, 
-          						isValidChangeTolerance, 
-          						responseCode, 
-          						"CT,1", 
-          						true, 
-          						g_changeTolerance);
-          						
-}
-
-
-//***SET CHANGE TOLERANCE VALUE CALIBRATION API FUNCTION***//
-// Function   : setChangeTolerance
-//
-// Description: This function is redefinition of main setChangeTolerance function to match the types of API function arguments.
-//
-// Parameters :  responseEnabled : bool : The response for serial printing is enabled if it's set to true.
-//                                        The serial printing is ignored if it's set to false.
-//               apiEnabled : bool : The API response is sent if it's set to true.
-//                                   Manual response is sent if it's set to false.
-//               inputChangeTolerance : int* : The array of one element which contains the new change tolerance value.
-//
-// Return     : void
-void setChangeTolerance(bool responseEnabled, bool apiEnabled, int* inputChangeTolerance)
-{
-  setChangeTolerance(responseEnabled, apiEnabled, inputChangeTolerance[0]);
-}
-
 //***GET BUTTON MAPPING FUNCTION***//
 // Function   : getButtonMapping
 //
@@ -2384,7 +2271,7 @@ int getButtonMode(bool responseEnabled, bool apiEnabled) {
   if (API_ENABLED)
   {
     EEPROM.get(EEPROM_buttonMode, buttonMode);
-    if (buttonMode != 1 && buttonMode != 2)
+    if (buttonMode != BUTTON_DIGITAL_MODE && buttonMode != BUTTON_ANALOG_MODE)
     {
       buttonMode = BUTTON_MODE;
       EEPROM.put(EEPROM_buttonMode, buttonMode);
@@ -2440,7 +2327,7 @@ void getButtonMode(bool responseEnabled, bool apiEnabled, int* optionalArray)
 void setButtonMode(bool responseEnabled, bool apiEnabled, int inputButtonMode)
 {
   bool isValidFactor = true;
-  if (inputButtonMode == 1 || inputButtonMode == 2) // Check if inputButtonMode is within range
+  if (inputButtonMode == BUTTON_DIGITAL_MODE || inputButtonMode == BUTTON_ANALOG_MODE) // Check if inputButtonMode is within range
   {
     // Valid inputButtonMode
     g_buttonMode = inputButtonMode;
@@ -2520,14 +2407,13 @@ void factoryReset(bool responseEnabled, bool apiEnabled, int resetType)
     }
     setJoystickSensitivity(false, true, SENSITIVITY_COUNTER);               // Set default sensitive counter
     setRotationAngle(false, true, ROTATION_ANGLE);                          // Set default rotation angle
-    setChangeTolerance(false, true, CHANGE_DEFAULT_TOLERANCE);              // Set default change tolerance
     setDebugMode(false, true, DEBUG_MODE);									                // Set default debug mode
 	  setDeadzone(false, true, JOYSTICK_DEADBAND);                            // Set default deadzone
     setButtonMode(false, true, BUTTON_MODE);                                // Set default button mode
 	  g_sensitivityCounter = SENSITIVITY_COUNTER;
-    g_debugModeEnabled = DEBUG_MODE;                                        // Set the default debug mode
+    g_debugModeEnabled = DEBUG_MODE;                                        
     g_deadzone = JOYSTICK_DEADBAND;
-	  g_buttonMode = BUTTON_MODE;                                             // Update the compensation factors
+	  g_buttonMode = BUTTON_MODE;                                             
     ledBlink(2, 250, 1);
   }
   else
@@ -3007,30 +2893,66 @@ void ledBlink(int numBlinks, int delayBlinks, int ledNumber)
 //*********************************//
 void pushButtonHandler()
 { 
-  if (digitalRead(BUTTON_UP_PIN) == LOW)
-  { // Up button pushed
+  if (digitalRead(BUTTON_UP_PIN) == LOW) {
     delay(250);
-    if (digitalRead(BUTTON_DOWN_PIN) == LOW)
-    { // Up and down button pushed
-      setJoystickCalibration(true, false);                      // Call joystick calibration if both push button up and down are pressed
-    }
-    else
-    { // Just up button pushed
-      increaseJoystickSensitivity(true, false);                      // Call increase joystick sensitivity function if push button up is pressed
-    }
+    if (g_buttonPreviousState[0] == HIGH) {
+      // Up button pushed
+      g_buttonTimer[0] = millis();
+      g_buttonPreviousState[0] = LOW;
+      g_buttonPreviousState[1] = digitalRead(BUTTON_DOWN_PIN);
+    } 
+  } 
+  else if (digitalRead(BUTTON_UP_PIN) == HIGH) {
+    if (g_buttonPreviousState[0] == LOW && digitalRead(BUTTON_DOWN_PIN) == HIGH && g_buttonPreviousState[1] == HIGH && (millis() - g_buttonTimer[0] >= BUTTON_LONG_PRESS_TIME)) {
+      // Up button was released after 2 seconds ( button up long press)
+      setButtonMode(true,false,BUTTON_ANALOG_MODE);                        // Set Button Analog Mode
+      ledBlink(2, 500, 3);                                                 // Blink Red and Green twice
+      g_buttonPreviousState[0] = HIGH;
+      g_buttonPreviousState[1] = HIGH;
+    } 
+    else if (g_buttonPreviousState[0] == LOW && digitalRead(BUTTON_DOWN_PIN) == HIGH && g_buttonPreviousState[1] == HIGH && (millis() - g_buttonTimer[0] < BUTTON_LONG_PRESS_TIME)) {
+      // Up button was released before 2 seconds ( button up short press)
+      increaseJoystickSensitivity(true, false);                            // Call increase joystick sensitivity function if push button up is pressed                
+      g_buttonPreviousState[0] = HIGH;
+      g_buttonPreviousState[1] = HIGH;
+    } 
+    else if (g_buttonPreviousState[0] == LOW && digitalRead(BUTTON_DOWN_PIN) == HIGH && g_buttonPreviousState[1] == LOW) {
+      // Up and Down buttons were released
+      setJoystickCalibration(true, false);                                 // Call joystick calibration if both push button up and down are pressed
+      g_buttonPreviousState[0] = HIGH;
+      g_buttonPreviousState[1] = HIGH;
+    } 
   }
 
-  if (digitalRead(BUTTON_DOWN_PIN) == LOW)
-  { // Down button pushed
+  if (digitalRead(BUTTON_DOWN_PIN) == LOW) {
     delay(250);
-    if (digitalRead(BUTTON_UP_PIN) == LOW)
-    { // Down button and up button pushed
-      setJoystickCalibration(true, false);                      // Call joystick calibration if both push button up and down are pressed
-    }
-    else
-    { // Just down button pushed
-      decreaseJoystickSensitivity(true, false);                      // Call increase joystick sensitivity function if push button up is pressed
-    }
+    if (g_buttonPreviousState[1] == HIGH) {
+      // Down button pushed
+      g_buttonTimer[1] = millis();
+      g_buttonPreviousState[0] = digitalRead(BUTTON_UP_PIN);
+      g_buttonPreviousState[1] = LOW;
+    } 
+  } 
+  else if (digitalRead(BUTTON_DOWN_PIN) == HIGH) {
+    if (g_buttonPreviousState[1] == LOW && digitalRead(BUTTON_UP_PIN) == HIGH && g_buttonPreviousState[0] == HIGH && (millis() - g_buttonTimer[1] >= BUTTON_LONG_PRESS_TIME)) {
+      // Down button was released after 2 seconds ( button down long press)
+      setButtonMode(true,false,BUTTON_DIGITAL_MODE);                       // Set Button Digital Mode
+      ledBlink(1, 500, 3);                                                 // Blink Red and Green once
+      g_buttonPreviousState[0] = HIGH;
+      g_buttonPreviousState[1] = HIGH;
+    } 
+    else if (g_buttonPreviousState[1] == LOW && digitalRead(BUTTON_UP_PIN) == HIGH && g_buttonPreviousState[0] == HIGH && (millis() - g_buttonTimer[1] < BUTTON_LONG_PRESS_TIME)) {
+      // Down button was released before 2 seconds ( button down short press)
+      decreaseJoystickSensitivity(true, false);                            // Call decrease joystick sensitivity function if push button up is pressed                
+      g_buttonPreviousState[0] = HIGH;
+      g_buttonPreviousState[1] = HIGH;
+    } 
+    else if (g_buttonPreviousState[1] == LOW && digitalRead(BUTTON_UP_PIN) == HIGH && g_buttonPreviousState[0] == LOW) {
+      // Up and Down buttons were released
+      setJoystickCalibration(true, false);                                 // Call joystick calibration if both push button up and down are pressed
+      g_buttonPreviousState[0] = HIGH;
+      g_buttonPreviousState[1] = HIGH;
+    } 
   }
 }
 
