@@ -66,8 +66,8 @@
 //These values can be changed to remap different output actions to different input actions
 #define ACTION_SHORT_PUFF   OUTPUT_BUTTON_ONE          // Default: Press and release button one or button X1(Left USB)/View(Right USB) in XAC
 #define ACTION_SHORT_SIP    OUTPUT_BUTTON_TWO          // Default: Press and release button two or button X2(Left USB)/Menu(Right USB) in XAC  
-#define ACTION_LONG_PUFF    OUTPUT_BUTTON_THREE        // Default: Press and release button three or button LS(Left USB)/RS(Right USB) in XAC
-#define ACTION_LONG_SIP     OUTPUT_BUTTON_FOUR         // Default: Press and release button four or button LB(Left USB)/RB(Right USB) in XAC 
+#define ACTION_LONG_PUFF    OUTPUT_BUTTON_FIVE         // Default: Press and release button five or button A(Left USB)/X(Right USB) in XAC
+#define ACTION_LONG_SIP     OUTPUT_BUTTON_SIX          // Default: Press and release button six or button B(Left USB)/Y(Right USB) in XAC
 #define ACTION_VLONG_PUFF   OUTPUT_JOYSTICK_HOME_RESET // Default: Initiates the Joystick home reset routine to reset center position. 
 #define ACTION_VLONG_SIP    OUTPUT_NOTHING             // Default: No action
 
