@@ -90,13 +90,13 @@ Once a volunteer maker agrees to take on your request, communicate with them to 
   </tr>
   <tr>
     <td>LipSync Gaming Startup Guide</td>
-    <td>1.6</td>
+    <td>1.4</td>
     <td>PDF</td>
     <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/master/Documentation/LipSync_Gaming_Startup_Guide.pdf">LipSync_Gaming_Startup_Guide.pdf</a></td>
   </tr>
   <tr>
     <td>LipSync Gaming User Guide</td>
-    <td>1.1</td>
+    <td>1.4</td>
     <td>PDF</td>
     <td><a href="https://github.com/makersmakingchange/LipSync-Gaming/blob/master/Documentation/LipSync_Gaming_User_Guide.pdf">LipSync_Gaming_User_Guide.pdf</a></td>
   </tr>
